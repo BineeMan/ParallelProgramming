@@ -44,6 +44,14 @@ public:
 
     Matrix(Matrix&& other) = default;
 
+    Matrix(double *buffer, int count, size_t rows, size_t cols) : Data(buffer, buffer + count) {
+        if (count <= 0) {
+            throw std::invalid_argument("Count is zero");
+        }
+        Rows = rows;
+        Cols = cols;
+    }
+
     Matrix(size_t rows, size_t cols) {
         Rows = rows;
         Cols = cols;
@@ -281,10 +289,20 @@ std::vector<double> SolveLinearEquation_Mpi1(const Matrix& A, const std::vector<
     const int base = A.GetRows() / size;
     const int reminder = A.GetRows() % size;
 
-    const int rowsPerProcess = base + (rank < reminder ? 1 : 0);
+    std::vector<int> sendCounts(size);
+    std::vector<int> offsets(size);
+    for (int i = 0; i < size; i++) {
+        const int rowsPerProcess = base + (i < reminder ? 1 : 0);
 
-    const int startRow = rank * base + std::min()
+        sendCounts[i] = A.GetCols() * rowsPerProcess;
+        offsets[i] = 0;
+    }
+    //const int rowsPerProcess = base + (rank < reminder ? 1 : 0);
+    //const int startRow = rank * base + std::min(reminder, rank);
 
+    Matrix localA(rowsPerProcess, A.GetCols());
+
+   // MPI_Scatterv
 
     while ( Norm2(Ax - b) / normB >= epsilon ) {
         const double tay{ 0.01 };
@@ -306,15 +324,17 @@ int main(int argc, char** argv) {
     int N = 100;
     Matrix matrix(N, N, 1.0);
     if (rank == 0) {
-        for (int i = 0; i < N; i++) {
-            matrix.At(i, i) = 2.0;
-        }
+     for (int i = 0; i < N; i++) {
+         matrix.At(i, i) = 2.0;
+     }
     }
 
     const double epsilon{ std::pow(10, -5) };
     std::vector<double> b(N, N + 1);
     Timer timer;
     auto res = SolveLinearEquation_Mpi1(matrix, b, epsilon, rank, size);
+    //auto res = SolveLinearEquation(matrix, b, epsilon);
     std::cout << "Time: " << timer.GetDurationSec() << std::endl;
     PrintVector(res);
+    MPI_Finalize();
 }
