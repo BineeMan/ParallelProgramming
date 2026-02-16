@@ -18,7 +18,7 @@ public:
     }
 
     double GetDurationSec() const {
-        struct timespec end{};
+        struct timespec end{ };
         clock_gettime(CLOCK_MONOTONIC_RAW, &end);
         return end.tv_sec - start.tv_sec + 0.000000001 * (end.tv_nsec - start.tv_nsec);
     }
@@ -28,7 +28,7 @@ private:
         return std::chrono::high_resolution_clock::now();
     }
 
-    struct timespec start{};
+    struct timespec start{ };
 };
 
 class Matrix {
@@ -158,7 +158,7 @@ public:
 
         std::vector<double> result(GetRows(), 0.0f);
 
-        for (int i = 0; i < GetCols(); i++) {
+        for (int i = 0; i < GetRows(); i++) {
             for (size_t j = 0; j < GetCols(); j++) {
                 result[i] += this->At(i, j) * other[j];
             }
@@ -239,6 +239,8 @@ ToType narrow_cast(FromType value) {
     if (value >= std::numeric_limits<ToType>::max()) {
         throw std::bad_cast();
     }
+
+
     return static_cast<ToType>(value);
 }
 
@@ -300,7 +302,6 @@ std::vector<double> SolveLinearEquation_Mpi1(const Matrix& A, const std::vector<
         throw std::runtime_error("normB == 0");
     }
 
-
     // Offsets
     const int base = A.GetRows() / size;
     const int reminder = A.GetRows() % size;
@@ -313,6 +314,7 @@ std::vector<double> SolveLinearEquation_Mpi1(const Matrix& A, const std::vector<
 
     int offset = 0;
     int axOffset = 0;
+
     for (int i = 0; i < size; i++) {
         const int rowsPerProcess = base + (i < reminder ? 1 : 0);
         const int numsPerProcess = A.GetCols() * rowsPerProcess;
@@ -324,42 +326,60 @@ std::vector<double> SolveLinearEquation_Mpi1(const Matrix& A, const std::vector<
         axOffsets[i] = axOffset;
         axOffset += rowsPerProcess;
     }
-    const int rowsCurrentProcess = base + (rank < reminder ? 1 : 0);
-    Matrix localA(rowsCurrentProcess, A.GetCols());
+    // int i = 0;
+    // while (!i)
+    //     sleep(5);
+
+    const int rowsPerCurrentProcess = base + (rank < reminder ? 1 : 0);
+    Matrix localA(rowsPerCurrentProcess, A.GetCols());
+
     MPI_Scatterv(A.Raw(), sendCounts.data(),
                  offsets.data(), MPI_DOUBLE,
-                 localA.Raw(), rowsCurrentProcess * A.GetCols(),
+                 localA.Raw(), rowsPerCurrentProcess * A.GetCols(),
                  MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
     std::vector<double> Ax(b.size());
-    const double tau{ 0.01 };
-    std::vector<double> localAx(rowsCurrentProcess);
+    std::vector<double> localAx(rowsPerCurrentProcess);
     std::vector<double> AxMinusB(Ax.size());
-    std::vector<double> localAxMinusB(Ax.size());
-    std::vector<double> x(b.size());
+    //std::vector<double> localAxMinusB(Ax.size());
+    std::vector<double> x(b.size(), 0.0);
+
+    const int startRowForCurrentProcess = axOffsets[rank];
 
     while (true) {
+        // 1) vector Ax = A * x
         localAx = localA * x;
         //std::cout << rank << "; " << localA.GetCols()<< "; "  << x.size() << "; " << std::endl;
         MPI_Allgatherv(localAx.data(), localAx.size(),
                        MPI_DOUBLE, Ax.data(), axSendCounts.data(),
                        axOffsets.data(), MPI_DOUBLE, MPI_COMM_WORLD);
-        //const double normAxMinusB = Norm2(AxMinusB);
 
-        double localSum = AxMinusB * AxMinusB;
+        //const double normAxMinusB = Norm2(AxMinusB);
+        //double localSum = AxMinusB * AxMinusB;
+
+        // 2) vector Ax - b
+        AxMinusB = Ax - b;
+        double localSum = 0;
+        for (int i = 0; i < rowsPerCurrentProcess; i++) {
+            const int globalIdx = startRowForCurrentProcess + i;
+            localSum += AxMinusB[globalIdx] * AxMinusB[globalIdx];
+        }
         double globalSum = 0;
         MPI_Allreduce(&localSum, &globalSum, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 
+        // 3) Невязка
         if (std::sqrt(globalSum) / normB < epsilon) {
             break;
         }
-        AxMinusB = Ax - b;
-        x = x - tau * AxMinusB;
 
+        const double tau{ 0.01 };
+
+
+        // Новый x
+        x = x - tau * AxMinusB;
     }
     return x;
 }
-
 
 int main(int argc, char** argv) {
     MPI_Init(&argc, &argv);
@@ -387,6 +407,7 @@ int main(int argc, char** argv) {
     const double epsilon{ std::pow(10, -5) };
     std::vector<double> b(N, N + 1);
     Timer timer;
+
     auto res = SolveLinearEquation_Mpi1(matrix, b, epsilon, rank, size);
     //auto res = SolveLinearEquation(matrix, b, epsilon);
     std::cout << "Time: " << timer.GetDurationSec() << std::endl;
