@@ -4,7 +4,7 @@ project(lab1)
 set(CMAKE_CXX_STANDARD 20)
 find_package(MPI REQUIRED)
 
-#add_compile_options(-O3)
+add_compile_options(-O0)
 
 add_executable(lab1 main.cpp)
 
