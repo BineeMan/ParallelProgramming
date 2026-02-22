@@ -324,15 +324,16 @@ std::vector<double>& operator-=(std::vector<double>& A, const std::vector<double
     return A;
 }
 
-void CheckAnswer(const std::vector<double>& answers, double expectedAnswer) {
+std::string CheckAnswer(const std::vector<double>& answers, double expectedAnswer) {
     for (size_t i = 0; i < answers.size(); i++) {
         if (std::fabs(answers[i] - expectedAnswer) > 1e-9) {
-            std::cout << "Wrong answer: expected " << expectedAnswer << ", got " << answers[i] << " at index " << i <<
-                    std::endl;
-            return;
+            // std::cout << "Wrong answer: expected " << expectedAnswer << ", got " << answers[i] << " at index " << i <<
+            //         std::endl;
+            return "Wrong answer: expected " + std::to_string(expectedAnswer) + ", got " + std::to_string(answers[i]) + " at index " + std::to_string(i);
         }
     }
-    std::cout << "OK" << std::endl;
+    //std::cout << "OK" << std::endl;
+    return "OK";
 }
 
 double Norm2(const std::vector<double>& vector) {
@@ -350,17 +351,27 @@ std::vector<double> SolveLinearEquation_Mpi1(const Matrix& matrixA, const std::v
             "rank <= 0 or size <= 0. Rank = " +
             std::to_string(rank) + ", size = " + std::to_string(size));
     }
-    if (!matrixA.IsSquare() || vecB.size() != matrixA.GetRows()) {
+
+    int isMatrixValid = rank == 0 ? matrixA.IsSquare() && vecB.size() == matrixA.GetRows() : 0;
+    MPI_Bcast(&isMatrixValid, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    if (!isMatrixValid) {
         throw std::invalid_argument("!matrix.IsSquare() || rightPart.size() != matrix.GetRows()");
     }
+
     const double normB = Norm2(vecB);
     if (normB == 0) {
         throw std::runtime_error("normB == 0");
     }
 
+    size_t kRowsCountMatrixA = rank == 0 ? matrixA.GetRows() : 1;
+    MPI_Bcast(&kRowsCountMatrixA, 1, MPI_UINT64_T, 0, MPI_COMM_WORLD);
+
+    size_t kColsCountMatrixA = rank == 0 ? matrixA.GetCols() : -1;
+    MPI_Bcast(&kColsCountMatrixA, 1, MPI_UINT64_T, 0, MPI_COMM_WORLD);
+
     // Offsets
-    const int base = matrixA.GetRows() / size;
-    const int reminder = matrixA.GetRows() % size;
+    const int base = kRowsCountMatrixA / size;
+    const int reminder = kRowsCountMatrixA % size;
 
     std::vector<int> sendCounts(size);
     std::vector<int> offsets(size);
@@ -373,7 +384,7 @@ std::vector<double> SolveLinearEquation_Mpi1(const Matrix& matrixA, const std::v
 
     for (int i = 0; i < size; i++) {
         const int rowsPerProcess = base + (i < reminder ? 1 : 0);
-        const int numsPerProcess = matrixA.GetCols() * rowsPerProcess;
+        const int numsPerProcess = kColsCountMatrixA * rowsPerProcess;
         sendCounts[i] = numsPerProcess;
         offsets[i] = offset;
         offset += numsPerProcess;
@@ -384,11 +395,11 @@ std::vector<double> SolveLinearEquation_Mpi1(const Matrix& matrixA, const std::v
     }
 
     const int rowsPerCurrentProcess = base + (rank < reminder ? 1 : 0);
-    Matrix localA(rowsPerCurrentProcess, matrixA.GetCols());
+    Matrix localA(rowsPerCurrentProcess, kColsCountMatrixA);
 
     MPI_Scatterv(matrixA.Raw(), sendCounts.data(),
                  offsets.data(), MPI_DOUBLE,
-                 localA.Raw(), rowsPerCurrentProcess * matrixA.GetCols(),
+                 localA.Raw(), rowsPerCurrentProcess * kColsCountMatrixA,
                  MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
     std::vector<double> Ax(vecB.size());
@@ -399,7 +410,8 @@ std::vector<double> SolveLinearEquation_Mpi1(const Matrix& matrixA, const std::v
 
     const int startRowForCurrentProcess = axOffsets[rank];
 
-    const double tau{ 1 / matrixA.GetMaxRowSum() };
+    double tau = rank == 0 ? 1.0 / matrixA.GetMaxRowSum() : 0;
+    MPI_Bcast(&tau, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
     while (true) {
         // 1) vector Ax = A * x
@@ -518,39 +530,8 @@ std::vector<double> SolveLinearEquation_Mpi2(const Matrix& matrixA, const std::v
     return vecX;
 }
 
-void task1(int N,  int rank, int size) {
-    Matrix matrix(N, N, 1.0);
-
-    for (int i = 0; i < N; i++) {
-        matrix.At(i, i) = 2.0;
-    }
-    const double epsilon{ std::pow(10, -5) };
-    std::vector<double> b(N, N + 1);
-    Timer timer;
-
-    auto res = SolveLinearEquation_Mpi1(matrix, b, epsilon, rank, size);
-    std::cout << "Time: " << timer.GetDurationSec() << std::endl;
-    CheckAnswer(res, 1);
-    sleep(1000);
-}
-
-void task2(int N, int rank, int size) {
-    Matrix matrix;
-    if (rank == 0) {
-        matrix.Resize(N, N, 1.0);
-        for (int i = 0; i < N; i++) {
-            matrix.At(i, i) = 2.0;
-        }
-    }
-    const double epsilon{ std::pow(10, -5) };
-
-    std::vector<double> b(N, N + 1);
-
-    Timer timer;
-
-    auto res = SolveLinearEquation_Mpi2(matrix, b, epsilon, rank, size);
-    std::cout << "Time: " << timer.GetDurationSec() << std::endl;
-    CheckAnswer(res, 1);
+void PrintResult(std::ostream& out, int rank, double durationSec, const std::vector<double>& res, double expectedAnswer) {
+    out << "Rank: " << std::to_string(rank) << ", Time: " << durationSec << ", Status: " << CheckAnswer(res, expectedAnswer) << std::endl;
 }
 
 int main(int argc, char** argv) {
@@ -559,10 +540,35 @@ int main(int argc, char** argv) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    //task1(rank, size);
-    int N = 750;
-    task1(N, rank, size);
-    //task2(N, rank, size);
-    //sleep(10000);
+    const int N = 768;
+
+    Matrix matrix;
+    if (rank == 0) {
+        matrix.Resize(N, N, 1.0);
+        for (int i = 0; i < N; i++) {
+            matrix.At(i, i) = 2.0;
+        }
+    }
+    const double epsilon{ std::pow(10, -5) };
+    std::vector<double> b(N, N + 1);
+
+    Timer timer;
+    std::vector<double> res;
+    double durationSec = 0;
+#if 1
+    timer.Reset();
+    res = SolveLinearEquation_Mpi1(matrix, b, epsilon, rank, size);
+    durationSec = timer.GetDurationSec();
+    PrintResult(std::cout, rank, durationSec, res, 1);
+#endif
+
+#if 0
+    timer.Reset();
+    res = SolveLinearEquation_Mpi2(matrix, b, epsilon, rank, size);
+    durationSec = timer.GetDurationSec();
+    PrintResult(std::cout, rank, durationSec, res, 1);
+#endif
+
+    sleep(1000);
     MPI_Finalize();
 }
