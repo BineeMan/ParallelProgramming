@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="MPI_4" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-n 4 ./cmake-build-debug/lab1" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" PROJECT_NAME="lab1" TARGET_NAME="lab1" CONFIG_NAME="Debug" RUN_PATH="/usr/lib64/openmpi/bin/mpirun">
+    <envs>
+      <env name="PATH" value="/usr/lib64/openmpi/bin:$PATH" />
+      <env name="LD_LIBRARY_PATH" value="/usr/lib64/openmpi/lib:$LD_LIBRARY_PATH " />
+    </envs>
+    <method v="2">
+      <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+    </method>
+  </configuration>
+</component>
