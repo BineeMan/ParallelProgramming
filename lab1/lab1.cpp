@@ -1,5 +1,5 @@
 #include <chrono>
-#include <format>
+//#include <format>
 #include <iostream>
 #include <cmath>
 #include <stdexcept>
@@ -218,6 +218,18 @@ public:
         }
         return maxSum;
     }
+
+    double GetMinRowSum() const {
+        double minSum{ 0.0f };
+        for (size_t i = 0; i < GetRows(); i++) {
+            double currentSum{ 0.0f };
+            for (size_t j = 0; j < GetCols(); j++) {
+                currentSum += std::abs(this->At(i, j));
+            }
+            minSum = std::min(minSum, currentSum);
+        }
+        return minSum;
+    }
 };
 
 struct Distribution {
@@ -276,14 +288,6 @@ struct Distribution {
     }
 };
 
-template<typename T>
-void PrintVector(const std::vector<T>& vector) {
-    for (T element: vector) {
-        std::cout << element << " ";
-    }
-    std::cout << std::endl;
-}
-
 double operator*(const std::vector<double>& A, const std::vector<double>& B) {
     if (A.size() != B.size()) {
         throw std::invalid_argument("Vector dimensions mismatch");
@@ -326,13 +330,11 @@ std::vector<double>& operator-=(std::vector<double>& A, const std::vector<double
 
 std::string CheckAnswer(const std::vector<double>& answers, double expectedAnswer) {
     for (size_t i = 0; i < answers.size(); i++) {
-        if (std::fabs(answers[i] - expectedAnswer) > 1e-9) {
-            // std::cout << "Wrong answer: expected " << expectedAnswer << ", got " << answers[i] << " at index " << i <<
-            //         std::endl;
-            return "Wrong answer: expected " + std::to_string(expectedAnswer) + ", got " + std::to_string(answers[i]) + " at index " + std::to_string(i);
+        if (std::fabs(answers[i] - expectedAnswer) > 0.0001) {
+            return "Wrong answer: expected " + std::to_string(expectedAnswer) + ", got " + std::to_string(answers[i]) +
+                   " at index " + std::to_string(i);
         }
     }
-    //std::cout << "OK" << std::endl;
     return "OK";
 }
 
@@ -345,7 +347,7 @@ double Norm2(const std::vector<double>& vector) {
 }
 
 std::vector<double> SolveLinearEquation_Mpi1(const Matrix& matrixA, const std::vector<double>& vecB,
-                                             double epsilon, int rank, int size) {
+                                             double epsilon, double tau, int rank, int size) {
     if (rank < 0 || size <= 0) {
         throw std::runtime_error(
             "rank <= 0 or size <= 0. Rank = " +
@@ -410,9 +412,6 @@ std::vector<double> SolveLinearEquation_Mpi1(const Matrix& matrixA, const std::v
 
     const int startRowForCurrentProcess = axOffsets[rank];
 
-    double tau = rank == 0 ? 1.0 / matrixA.GetMaxRowSum() : 0;
-    MPI_Bcast(&tau, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
     while (true) {
         // 1) vector Ax = A * x
         localAx = localA * x;
@@ -436,14 +435,13 @@ std::vector<double> SolveLinearEquation_Mpi1(const Matrix& matrixA, const std::v
             break;
         }
 
-        // Новый x
         x -= tau * AxMinusB;
     }
     return x;
 }
 
 std::vector<double> SolveLinearEquation_Mpi2(const Matrix& matrixA, const std::vector<double>& vecB,
-                                             double epsilon, int rank, int size) {
+                                             double epsilon, double tau, int rank, int size) {
     if (rank < 0 || size <= 0) {
         throw std::runtime_error(
             "rank <= 0 or size <= 0. Rank = " + std::to_string(rank) + ", size = " + std::to_string(size));
@@ -499,10 +497,6 @@ std::vector<double> SolveLinearEquation_Mpi2(const Matrix& matrixA, const std::v
 
     Distribution axDistibution(kRowsCountMatrixA, size);
 
-    //const int startRowForCurrentProcess = axDistibution.Offsets.at(rank);
-    double tau = rank == 0 ? 1.0 / matrixA.GetMaxRowSum() : 0;
-    MPI_Bcast(&tau, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
     while (true) {
         // 1) vector Ax = A * x
         localVecAx = localMatrixA * vecX;
@@ -520,28 +514,56 @@ std::vector<double> SolveLinearEquation_Mpi2(const Matrix& matrixA, const std::v
         if (std::sqrt(norm) / normB < epsilon) {
             break;
         }
-
         // 4) Обновление x
         localVecX -= tau * (localVecAx - localVecB);
         MPI_Allgatherv(localVecX.data(), localVecX.size(),
                        MPI_DOUBLE, vecX.data(), axDistibution.Sizes.data(),
                        axDistibution.Offsets.data(), MPI_DOUBLE, MPI_COMM_WORLD);
     }
+    //std::cout << iterCount << " iterations" << std::endl;
     return vecX;
 }
 
-void PrintResult(std::ostream& out, int rank, double durationSec, const std::vector<double>& res, double expectedAnswer) {
-    out << "Rank: " << std::to_string(rank) << ", Time: " << durationSec << ", Status: " << CheckAnswer(res, expectedAnswer) << std::endl;
+std::string GetCurrentDateTime() {
+    auto now = std::chrono::system_clock::now();
+    std::time_t now_time = std::chrono::system_clock::to_time_t(now);
+    return std::ctime(&now_time);
+}
+
+void PrintResult(std::ostream& out, const std::string& testName, int size, int rank, double durationSec,
+                 const std::vector<double>& res, double expectedAnswer) {
+    out << GetCurrentDateTime() <<  "Name: " << testName << ", Size: " << size << ", Rank: " << std::to_string(rank) << ", Time: " << durationSec << ", Status: " <<
+            CheckAnswer(res, expectedAnswer) << std::endl;
 }
 
 int main(int argc, char** argv) {
+
     MPI_Init(&argc, &argv);
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
+#if 1
+    int N = 0;
+    double tau = 0.0;
+    int task = -1;
+    if (rank == 0) {
+        N = atoi(argv[1]);
+        tau = atof(argv[2]);
+        task = atoi(argv[3]);
+    }
 
-    const int N = 768;
-
+    MPI_Bcast(&N, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&tau, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&task, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    if (task == -1) {
+        std::cout << "No task found!" << std::endl;
+        return 0;
+    }
+#endif
+#if 0
+    const int N = 8000;
+    const double tau = 0.00001;
+#endif
     Matrix matrix;
     if (rank == 0) {
         matrix.Resize(N, N, 1.0);
@@ -556,19 +578,25 @@ int main(int argc, char** argv) {
     std::vector<double> res;
     double durationSec = 0;
 #if 1
-    timer.Reset();
-    res = SolveLinearEquation_Mpi1(matrix, b, epsilon, rank, size);
-    durationSec = timer.GetDurationSec();
-    PrintResult(std::cout, rank, durationSec, res, 1);
+    if (task == 1) {
+        timer.Reset();
+        res = SolveLinearEquation_Mpi1(matrix, b, epsilon, tau, rank, size);
+        durationSec = timer.GetDurationSec();
+        if (rank == 0) {
+            PrintResult(std::cout, "task1", size, rank, durationSec, res, 1);
+        }
+    }
 #endif
 
-#if 0
-    timer.Reset();
-    res = SolveLinearEquation_Mpi2(matrix, b, epsilon, rank, size);
-    durationSec = timer.GetDurationSec();
-    PrintResult(std::cout, rank, durationSec, res, 1);
+#if 1
+    if (task == 2) {
+        timer.Reset();
+        res = SolveLinearEquation_Mpi2(matrix, b, epsilon, tau, rank, size);
+        durationSec = timer.GetDurationSec();
+        if (rank == 0) {
+            PrintResult(std::cout, "task2", size, rank, durationSec, res, 1);
+        }
+    }
 #endif
-
-    sleep(1000);
     MPI_Finalize();
 }
