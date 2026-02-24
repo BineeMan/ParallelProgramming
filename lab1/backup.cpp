@@ -340,30 +340,25 @@ std::string CheckAnswer(const std::vector<double>& answers, double expectedAnswe
 
 double Norm2(const std::vector<double>& vector) {
     double sum{ 0.0f };
-    for (double element : vector) {
+    for (double element: vector) {
         sum += element * element;
     }
     return std::sqrt(sum);
 }
 
-double SumSquareVector(const std::vector<double>& vector) {
-    double sum{ 0.0f };
-    for (double element : vector) {
-        sum += element * element;
-    }
-    return sum;
-}
-
-std::vector<double> SolveLinearEquation_Mpi1(const Matrix& localMatrixA, int matrixSize, const std::vector<double>& vecB,
+#if 0
+std::vector<double> SolveLinearEquation_Mpi1(const Matrix& matrixA, const std::vector<double>& vecB,
                                              double epsilon, double tau, int rank, int size) {
-    if (rank < 0 || size <= 0 || matrixSize <= 0) {
+    if (rank < 0 || size <= 0) {
         throw std::runtime_error(
-            "rank < 0 || size <= 0 || N <= 0" +
+            "rank <= 0 or size <= 0. Rank = " +
             std::to_string(rank) + ", size = " + std::to_string(size));
     }
 
-    if (vecB.size() != matrixSize) {
-        throw std::invalid_argument("vecB.size() != N");
+    int isMatrixValid = rank == 0 ? matrixA.IsSquare() && vecB.size() == matrixA.GetRows() : 0;
+    MPI_Bcast(&isMatrixValid, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    if (!isMatrixValid) {
+        throw std::invalid_argument("!matrix.IsSquare() || rightPart.size() != matrix.GetRows()");
     }
 
     const double normB = Norm2(vecB);
@@ -371,17 +366,28 @@ std::vector<double> SolveLinearEquation_Mpi1(const Matrix& localMatrixA, int mat
         throw std::runtime_error("normB == 0");
     }
 
-    const int kRowsPerCurrentProcess = matrixSize / size + (rank < (matrixSize % size) ? 1 : 0);
-    if (kRowsPerCurrentProcess != localMatrixA.GetRows()) {
-        throw std::invalid_argument("localMatrixA.GetRows() != kRowsPerCurrentProcess");
-    }
+    size_t kMatrixRows = rank == 0 ? matrixA.GetRows() : 1;
+    MPI_Bcast(&kMatrixRows, 1, MPI_UINT64_T, 0, MPI_COMM_WORLD);
+
+    size_t kMatrixCols = rank == 0 ? matrixA.GetCols() : -1;
+    MPI_Bcast(&kMatrixCols, 1, MPI_UINT64_T, 0, MPI_COMM_WORLD);
+
+    const Distribution aDistribution(kMatrixCols, kMatrixRows, size);
+    const int rowsPerCurrentProcess = aDistribution.GetSizeAt(rank) / kMatrixRows;
+
+    Matrix localMatrixA(rowsPerCurrentProcess, kMatrixCols);
+    MPI_Scatterv(matrixA.Raw(), aDistribution.Sizes.data(),
+                 aDistribution.Offsets.data(), MPI_DOUBLE,
+                 localMatrixA.Raw(), rowsPerCurrentProcess * kMatrixCols,
+                 MPI_DOUBLE, 0, MPI_COMM_WORLD);
+
     std::vector<double> Ax(vecB.size());
-    std::vector<double> localAx(kRowsPerCurrentProcess);
+    std::vector<double> localAx(rowsPerCurrentProcess);
     std::vector<double> AxMinusB(Ax.size());
 
     std::vector<double> x(vecB.size(), 0.0);
 
-    Distribution axDistibution(matrixSize, size);
+    Distribution axDistibution(kMatrixRows, size);
     const int startRowForCurrentProcess = axDistibution.GetOffsetAt(rank);
 
     while (true) {
@@ -395,7 +401,7 @@ std::vector<double> SolveLinearEquation_Mpi1(const Matrix& localMatrixA, int mat
         // 2) vector Ax - b
         AxMinusB = Ax - vecB;
         double localSum = 0;
-        for (int i = 0; i < kRowsPerCurrentProcess; i++) {
+        for (int i = 0; i < rowsPerCurrentProcess; i++) {
             const int globalIdx = startRowForCurrentProcess + i;
             localSum += AxMinusB[globalIdx] * AxMinusB[globalIdx];
         }
@@ -412,29 +418,58 @@ std::vector<double> SolveLinearEquation_Mpi1(const Matrix& localMatrixA, int mat
     return x;
 }
 
-std::vector<double> SolveLinearEquation_Mpi2(const Matrix& localMatrixA, int matrixSize, const std::vector<double>& localVecB,
+std::vector<double> SolveLinearEquation_Mpi2(const Matrix& matrixA, const std::vector<double>& vecB,
                                              double epsilon, double tau, int rank, int size) {
-    if (rank < 0 || size <= 0 || matrixSize <= 0) {
+    if (rank < 0 || size <= 0) {
         throw std::runtime_error(
-            "rank < 0 || size <= 0 || N <= 0" +
-            std::to_string(rank) + ", size = " + std::to_string(size));
+            "rank <= 0 or size <= 0. Rank = " + std::to_string(rank) + ", size = " + std::to_string(size));
     }
 
-    double normB = 0;
-    double sumVecB = SumSquareVector(localVecB);
-    MPI_Allreduce(&sumVecB, &normB, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-    normB = std::sqrt(normB);
-
-    const int kRowsPerCurrentProcess = matrixSize / size + (rank < (matrixSize % size) ? 1 : 0);
-    if (kRowsPerCurrentProcess != localVecB.size()) {
-        throw std::invalid_argument("localVecB.size() != kRowsPerCurrentProcess");
+    int isMatrixValid = rank == 0 ? matrixA.IsSquare() && vecB.size() == matrixA.GetRows() : 0;
+    MPI_Bcast(&isMatrixValid, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    if (!isMatrixValid) {
+        throw std::invalid_argument("!matrix.IsSquare() || rightPart.size() != matrix.GetRows()");
     }
 
-    std::vector<double> vecX(matrixSize, 0.0);
-    std::vector<double> localVecAx(kRowsPerCurrentProcess);
-    std::vector<double> localVecX(kRowsPerCurrentProcess, 0.0);
+    double normB = rank == 0 ? Norm2(vecB) : -1;
+    MPI_Bcast(&normB, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    if (normB <= 0) {
+        throw std::runtime_error("normB == 0");
+    }
+    size_t kVectorSize = rank == 0 ? vecB.size() : -1;
+    MPI_Bcast(&kVectorSize, 1, MPI_UINT64_T, 0, MPI_COMM_WORLD);
 
-    const Distribution axDistribution(matrixSize, size);
+    size_t kMatrixRows = rank == 0 ? matrixA.GetRows() : 1;
+    MPI_Bcast(&kMatrixRows, 1, MPI_UINT64_T, 0, MPI_COMM_WORLD);
+
+    // matrixA->localMatrixA
+    size_t kMatrixCols = rank == 0 ? matrixA.GetCols() : -1;
+    MPI_Bcast(&kMatrixCols, 1, MPI_UINT64_T, 0, MPI_COMM_WORLD);
+
+    const Distribution aDistribution(kMatrixCols, kMatrixRows, size);
+    const int rowsPerCurrentProcess = aDistribution.GetSizeAt(rank) / kMatrixRows;
+
+    Matrix localMatrixA(rowsPerCurrentProcess, kMatrixCols);
+    MPI_Scatterv(matrixA.Raw(), aDistribution.Sizes.data(),
+                 aDistribution.Offsets.data(), MPI_DOUBLE,
+                 localMatrixA.Raw(), rowsPerCurrentProcess * kMatrixCols,
+                 MPI_DOUBLE, 0, MPI_COMM_WORLD);
+
+    // b->localB
+    const Distribution vectorDistribution(kVectorSize, size);
+    std::vector<double> localVecB(vectorDistribution.GetSizeAt(rank));
+    MPI_Scatterv(vecB.data(), vectorDistribution.Sizes.data(),
+                 vectorDistribution.Offsets.data(), MPI_DOUBLE,
+                 localVecB.data(), localVecB.size(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
+
+    // Preallocate data for calculation
+    std::vector<double> vecAx(kVectorSize);
+    std::vector<double> localVecAx(rowsPerCurrentProcess);
+
+    std::vector<double> vecX(kVectorSize, 0.0);
+    std::vector<double> localVecX(vectorDistribution.GetSizeAt(rank), 0.0);
+
+    Distribution axDistibution(kMatrixRows, size);
 
     while (true) {
         // 1) vector Ax = A * x
@@ -442,7 +477,7 @@ std::vector<double> SolveLinearEquation_Mpi2(const Matrix& localMatrixA, int mat
 
         // 2) Норма ||Ax - b||
         double localNorm = 0;
-        for (int i = 0; i < kRowsPerCurrentProcess; i++) {
+        for (int i = 0; i < rowsPerCurrentProcess; i++) {
             const double r = localVecAx.at(i) - localVecB.at(i);
             localNorm += r * r;
         }
@@ -456,12 +491,13 @@ std::vector<double> SolveLinearEquation_Mpi2(const Matrix& localMatrixA, int mat
         // 4) Обновление x
         localVecX -= tau * (localVecAx - localVecB);
         MPI_Allgatherv(localVecX.data(), localVecX.size(),
-                       MPI_DOUBLE, vecX.data(), axDistribution.Sizes.data(),
-                       axDistribution.Offsets.data(), MPI_DOUBLE, MPI_COMM_WORLD);
+                       MPI_DOUBLE, vecX.data(), axDistibution.Sizes.data(),
+                       axDistibution.Offsets.data(), MPI_DOUBLE, MPI_COMM_WORLD);
     }
     //std::cout << iterCount << " iterations" << std::endl;
     return vecX;
 }
+#endif
 
 std::string GetCurrentDateTime() {
     auto now = std::chrono::system_clock::now();
@@ -501,38 +537,45 @@ int main(int argc, char** argv) {
 #endif
 #if 1
     const int N = 8000;
-    const double tau = 0.000001;
-    const double epsilon{ std::pow(10, -5) };
+    const double tau = 0.0001;
 #endif
-    const int kRowsPerCurrentProcess = N / size + (rank < (N % size) ? 1 : 0);
-    Matrix localMatrixA(kRowsPerCurrentProcess, N, 1);
-    for (int i = 0; i < kRowsPerCurrentProcess; i++) {
-        localMatrixA.At(i, i) = 2.0;
+    Matrix matrix;
+    if (rank == 0) {
+        matrix.Resize(N, N, 1.0);
+        for (int i = 0; i < N; i++) {
+            matrix.At(i, i) = 2.0;
+        }
     }
-
-    std::vector<double> b;
+    const double epsilon{ std::pow(10, -5) };
+    std::vector<double> b(N, N + 1);
 
     Timer timer;
-    std::vector<double> result;
+    std::vector<double> res;
     double durationSec = 0;
 #if 1
-    b = std::vector<double>(N, N + 1);
-    timer.Reset();
-    result = SolveLinearEquation_Mpi1(localMatrixA, N, b, epsilon, tau, rank, size);
-    durationSec = timer.GetDurationSec();
-    if (rank == 0) {
-        PrintResult(std::cout, "task1_new", size, rank, durationSec, result, 1);
-    }
-#endif
-#if 0
-    b = std::vector<double>(kRowsPerCurrentProcess, N + 1);
-    timer.Reset();
-    result = SolveLinearEquation_Mpi2(localMatrixA, N, b, epsilon, tau, rank, size);
-    durationSec = timer.GetDurationSec();
-    if (rank == 0) {
-        PrintResult(std::cout, "task2_new", size, rank, durationSec, result, 1);
-    }
+
 #endif
 
+#if 0
+//    if (task == 1) {
+        timer.Reset();
+        res = SolveLinearEquation_Mpi1(matrix, b, epsilon, tau, rank, size);
+        durationSec = timer.GetDurationSec();
+        if (rank == 0) {
+            PrintResult(std::cout, "task1", size, rank, durationSec, res, 1);
+        }
+//    }
+#endif
+
+#if 0
+    //if (task == 2) {
+        timer.Reset();
+        res = SolveLinearEquation_Mpi2(matrix, b, epsilon, tau, rank, size);
+        durationSec = timer.GetDurationSec();
+        if (rank == 0) {
+            PrintResult(std::cout, "task2", size, rank, durationSec, res, 1);
+        }
+   // }
+#endif
     MPI_Finalize();
 }
