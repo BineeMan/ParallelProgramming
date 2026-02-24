@@ -365,43 +365,19 @@ std::vector<double> SolveLinearEquation_Mpi1(const Matrix& matrixA, const std::v
         throw std::runtime_error("normB == 0");
     }
 
-    size_t kRowsCountMatrixA = rank == 0 ? matrixA.GetRows() : 1;
-    MPI_Bcast(&kRowsCountMatrixA, 1, MPI_UINT64_T, 0, MPI_COMM_WORLD);
+    size_t kMatrixRows = rank == 0 ? matrixA.GetRows() : 1;
+    MPI_Bcast(&kMatrixRows, 1, MPI_UINT64_T, 0, MPI_COMM_WORLD);
 
-    size_t kColsCountMatrixA = rank == 0 ? matrixA.GetCols() : -1;
-    MPI_Bcast(&kColsCountMatrixA, 1, MPI_UINT64_T, 0, MPI_COMM_WORLD);
+    size_t kMatrixCols = rank == 0 ? matrixA.GetCols() : -1;
+    MPI_Bcast(&kMatrixCols, 1, MPI_UINT64_T, 0, MPI_COMM_WORLD);
 
-    // Offsets
-    const int base = kRowsCountMatrixA / size;
-    const int reminder = kRowsCountMatrixA % size;
+    const Distribution aDistribution(kMatrixCols, kMatrixRows, size);
+    const int rowsPerCurrentProcess = aDistribution.GetSizeAt(rank) / kMatrixRows;
 
-    std::vector<int> sendCounts(size);
-    std::vector<int> offsets(size);
-
-    std::vector<int> axSendCounts(size);
-    std::vector<int> axOffsets(size);
-
-    int offset = 0;
-    int axOffset = 0;
-
-    for (int i = 0; i < size; i++) {
-        const int rowsPerProcess = base + (i < reminder ? 1 : 0);
-        const int numsPerProcess = kColsCountMatrixA * rowsPerProcess;
-        sendCounts[i] = numsPerProcess;
-        offsets[i] = offset;
-        offset += numsPerProcess;
-
-        axSendCounts[i] = rowsPerProcess;
-        axOffsets[i] = axOffset;
-        axOffset += rowsPerProcess;
-    }
-
-    const int rowsPerCurrentProcess = base + (rank < reminder ? 1 : 0);
-    Matrix localA(rowsPerCurrentProcess, kColsCountMatrixA);
-
-    MPI_Scatterv(matrixA.Raw(), sendCounts.data(),
-                 offsets.data(), MPI_DOUBLE,
-                 localA.Raw(), rowsPerCurrentProcess * kColsCountMatrixA,
+    Matrix localMatrixA(rowsPerCurrentProcess, kMatrixCols);
+    MPI_Scatterv(matrixA.Raw(), aDistribution.Sizes.data(),
+                 aDistribution.Offsets.data(), MPI_DOUBLE,
+                 localMatrixA.Raw(), rowsPerCurrentProcess * kMatrixCols,
                  MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
     std::vector<double> Ax(vecB.size());
@@ -410,15 +386,16 @@ std::vector<double> SolveLinearEquation_Mpi1(const Matrix& matrixA, const std::v
 
     std::vector<double> x(vecB.size(), 0.0);
 
-    const int startRowForCurrentProcess = axOffsets[rank];
+    Distribution axDistibution(kMatrixRows, size);
+    const int startRowForCurrentProcess = axDistibution.GetOffsetAt(rank);
 
     while (true) {
         // 1) vector Ax = A * x
-        localAx = localA * x;
+        localAx = localMatrixA * x;
 
         MPI_Allgatherv(localAx.data(), localAx.size(),
-                       MPI_DOUBLE, Ax.data(), axSendCounts.data(),
-                       axOffsets.data(), MPI_DOUBLE, MPI_COMM_WORLD);
+                       MPI_DOUBLE, Ax.data(), axDistibution.Sizes.data(),
+                       axDistibution.Offsets.data(), MPI_DOUBLE, MPI_COMM_WORLD);
 
         // 2) vector Ax - b
         AxMinusB = Ax - vecB;
@@ -458,27 +435,23 @@ std::vector<double> SolveLinearEquation_Mpi2(const Matrix& matrixA, const std::v
     if (normB <= 0) {
         throw std::runtime_error("normB == 0");
     }
-
-    size_t kRowsCountMatrixA = rank == 0 ? matrixA.GetRows() : 1;
-    MPI_Bcast(&kRowsCountMatrixA, 1, MPI_UINT64_T, 0, MPI_COMM_WORLD);
-
     size_t kVectorSize = rank == 0 ? vecB.size() : -1;
     MPI_Bcast(&kVectorSize, 1, MPI_UINT64_T, 0, MPI_COMM_WORLD);
 
+    size_t kMatrixRows = rank == 0 ? matrixA.GetRows() : 1;
+    MPI_Bcast(&kMatrixRows, 1, MPI_UINT64_T, 0, MPI_COMM_WORLD);
+
     // matrixA->localMatrixA
-    size_t matrixCols = rank == 0 ? matrixA.GetCols() : -1;
-    MPI_Bcast(&matrixCols, 1, MPI_UINT64_T, 0, MPI_COMM_WORLD);
+    size_t kMatrixCols = rank == 0 ? matrixA.GetCols() : -1;
+    MPI_Bcast(&kMatrixCols, 1, MPI_UINT64_T, 0, MPI_COMM_WORLD);
 
-    size_t matrixRows = rank == 0 ? matrixA.GetRows() : -1;
-    MPI_Bcast(&matrixRows, 1, MPI_UINT64_T, 0, MPI_COMM_WORLD);
+    const Distribution aDistribution(kMatrixCols, kMatrixRows, size);
+    const int rowsPerCurrentProcess = aDistribution.GetSizeAt(rank) / kMatrixRows;
 
-    const Distribution aDistribution(matrixCols, matrixRows, size);
-    const int rowsPerCurrentProcess = aDistribution.GetSizeAt(rank) / matrixRows;
-
-    Matrix localMatrixA(rowsPerCurrentProcess, matrixCols);
+    Matrix localMatrixA(rowsPerCurrentProcess, kMatrixCols);
     MPI_Scatterv(matrixA.Raw(), aDistribution.Sizes.data(),
                  aDistribution.Offsets.data(), MPI_DOUBLE,
-                 localMatrixA.Raw(), rowsPerCurrentProcess * matrixCols,
+                 localMatrixA.Raw(), rowsPerCurrentProcess * kMatrixCols,
                  MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
     // b->localB
@@ -495,7 +468,7 @@ std::vector<double> SolveLinearEquation_Mpi2(const Matrix& matrixA, const std::v
     std::vector<double> vecX(kVectorSize, 0.0);
     std::vector<double> localVecX(vectorDistribution.GetSizeAt(rank), 0.0);
 
-    Distribution axDistibution(kRowsCountMatrixA, size);
+    Distribution axDistibution(kMatrixRows, size);
 
     while (true) {
         // 1) vector Ax = A * x
@@ -542,7 +515,7 @@ int main(int argc, char** argv) {
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
-#if 1
+#if 0
     int N = 0;
     double tau = 0.0;
     int task = -1;
@@ -560,9 +533,9 @@ int main(int argc, char** argv) {
         return 0;
     }
 #endif
-#if 0
+#if 1
     const int N = 8000;
-    const double tau = 0.00001;
+    const double tau = 0.0001;
 #endif
     Matrix matrix;
     if (rank == 0) {
@@ -578,25 +551,29 @@ int main(int argc, char** argv) {
     std::vector<double> res;
     double durationSec = 0;
 #if 1
-    if (task == 1) {
+
+#endif
+
+#if 0
+//    if (task == 1) {
         timer.Reset();
         res = SolveLinearEquation_Mpi1(matrix, b, epsilon, tau, rank, size);
         durationSec = timer.GetDurationSec();
         if (rank == 0) {
             PrintResult(std::cout, "task1", size, rank, durationSec, res, 1);
         }
-    }
+//    }
 #endif
 
-#if 1
-    if (task == 2) {
+#if 0
+    //if (task == 2) {
         timer.Reset();
         res = SolveLinearEquation_Mpi2(matrix, b, epsilon, tau, rank, size);
         durationSec = timer.GetDurationSec();
         if (rank == 0) {
             PrintResult(std::cout, "task2", size, rank, durationSec, res, 1);
         }
-    }
+   // }
 #endif
     MPI_Finalize();
 }
