@@ -1,0 +1,382 @@
+#include <chrono>
+#include <iostream>
+#include <cmath>
+#include <stdexcept>
+#include <thread>
+#include <vector>
+#include <mpi.h>
+
+class Timer {
+public:
+    void Reset() {
+        clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+    }
+
+    Timer() {
+        clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+    }
+
+    double GetDurationSec() const {
+        struct timespec end{ };
+        clock_gettime(CLOCK_MONOTONIC_RAW, &end);
+        return end.tv_sec - start.tv_sec + 0.000000001 * (end.tv_nsec - start.tv_nsec);
+    }
+
+private:
+    struct timespec start{ };
+};
+
+class Matrix {
+private:
+    std::vector<double> Data;
+    size_t Rows{ 0 };
+    size_t Cols{ 0 };
+
+public:
+    Matrix() = default;
+
+    Matrix(const Matrix& other) = default;
+
+    Matrix(Matrix&& other) = default;
+
+    Matrix(double* buffer, int count, size_t rows, size_t cols) : Data(buffer, buffer + count) {
+        if (count <= 0) {
+            throw std::invalid_argument("Count is zero");
+        }
+        Rows = rows;
+        Cols = cols;
+    }
+
+    Matrix(size_t rows, size_t cols) {
+        Rows = rows;
+        Cols = cols;
+        Data.resize(rows * cols, 0.0f);
+    }
+
+    Matrix(size_t rows, size_t cols, double value) {
+        Rows = rows;
+        Cols = cols;
+        Data.resize(rows * cols, value);
+    }
+
+    Matrix(const std::vector<double>& vector, size_t rows, size_t cols) {
+        if (vector.size() != rows * cols) {
+            throw std::out_of_range("Vector size does not match matrix size");
+        }
+        Data = vector;
+        Rows = rows;
+        Cols = cols;
+    }
+
+    void Resize(size_t rows, size_t cols, double value) {
+        Rows = rows;
+        Cols = cols;
+        Data.resize(rows * cols, value);
+    }
+
+    Matrix& operator=(const Matrix& other) {
+        if (this != &other) {
+            Data = other.Data;
+            Rows = other.Rows;
+            Cols = other.Cols;
+        }
+        return *this;
+    }
+
+    double& At(size_t i, size_t j) {
+        if (i >= Rows || j >= Cols) {
+            throw std::out_of_range("Matrix indices out of range");
+        }
+        return Data[i * Cols + j];
+    }
+
+    const double& At(size_t i, size_t j) const {
+        if (i >= Rows || j >= Cols) {
+            throw std::out_of_range("Matrix indices out of range");
+        }
+        return Data[i * Cols + j];
+    }
+
+    Matrix Multiply(const Matrix& other) const {
+        if (GetCols() != other.GetRows()) {
+            throw std::invalid_argument("Matrix dimensions mismatch");
+        }
+
+        Matrix result(GetRows(), other.GetCols());
+
+        for (size_t i = 0; i < GetRows(); i++) {
+            for (size_t j = 0; j < other.GetCols(); j++) {
+                double sum{ 0.0f };
+                for (size_t k = 0; k < GetCols(); k++) {
+                    sum += this->At(i, k) * other.At(k, j);
+                }
+                result.At(i, j) = sum;
+            }
+        }
+        return result;
+    }
+
+    Matrix Add(const Matrix& other) const {
+        CheckSize(other);
+
+        Matrix result(GetRows(), GetCols());
+        for (size_t i = 0; i < GetRows(); i++) {
+            for (size_t j = 0; j < GetCols(); j++) {
+                result.At(i, j) = this->At(i, j) + other.At(i, j);
+            }
+        }
+
+        return result;
+    }
+
+    Matrix Subtract(const Matrix& other) const {
+        CheckSize(other);
+
+        Matrix result(GetRows(), GetCols());
+        for (size_t i = 0; i < GetRows(); i++) {
+            for (size_t j = 0; j < GetCols(); j++) {
+                result.At(i, j) = this->At(i, j) - other.At(i, j);
+            }
+        }
+
+        return result;
+    }
+
+    Matrix MultiplyScalar(double scalar) const {
+        Matrix result(GetRows(), GetCols());
+        for (size_t i = 0; i < GetRows(); i++) {
+            for (size_t j = 0; j < GetCols(); j++) {
+                result.At(i, j) = this->At(i, j) * scalar;
+            }
+        }
+        return result;
+    }
+
+    std::vector<double> operator*(const std::vector<double>& other) const {
+        if (GetCols() > other.size()) {
+            throw std::invalid_argument("Vector dimensions mismatch");
+        }
+
+        std::vector<double> result(GetRows(), 0.0f);
+
+        for (int i = 0; i < GetRows(); i++) {
+            for (size_t j = 0; j < GetCols(); j++) {
+                result[i] += this->At(i, j) * other[j];
+            }
+        }
+        return result;
+    }
+
+    size_t GetRows() const {
+        return Rows;
+    }
+
+    size_t GetCols() const {
+        return Cols;
+    }
+
+    double* Raw() {
+        return Data.data();
+    }
+
+    const double* Raw() const {
+        return Data.data();
+    }
+
+    void Print() const {
+        for (size_t i = 0; i < GetRows(); i++) {
+            for (size_t j = 0; j < GetCols(); j++) {
+                std::cout << At(i, j) << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
+
+    bool IsSameSize(const Matrix& other) const {
+        return GetCols() == other.GetCols() && GetRows() == other.GetRows();
+    }
+
+    void CheckSize(const Matrix& other) const {
+        if (!IsSameSize(other)) {
+            throw std::out_of_range("Matrix dimensions mismatch");
+        }
+    }
+
+    bool IsSquare() const {
+        return GetRows() == GetCols();
+    }
+
+    double GetMaxRowSum() const {
+        double maxSum{ 0.0f };
+        for (size_t i = 0; i < GetRows(); i++) {
+            double currentSum{ 0.0f };
+            for (size_t j = 0; j < GetCols(); j++) {
+                currentSum += std::abs(this->At(i, j));
+            }
+            maxSum = std::max(maxSum, currentSum);
+        }
+        return maxSum;
+    }
+
+    double GetMinRowSum() const {
+        double minSum{ 0.0f };
+        for (size_t i = 0; i < GetRows(); i++) {
+            double currentSum{ 0.0f };
+            for (size_t j = 0; j < GetCols(); j++) {
+                currentSum += std::abs(this->At(i, j));
+            }
+            minSum = std::min(minSum, currentSum);
+        }
+        return minSum;
+    }
+};
+
+struct Distribution {
+    std::vector<int> Sizes;
+    std::vector<int> Offsets;
+
+    int GetSizeAt(int rank) const {
+        return Sizes.at(rank);
+    }
+
+    int GetOffsetAt(int rank) const {
+        return Offsets.at(rank);
+    }
+
+    Distribution() = default;
+
+    Distribution(int size, int splitSize) {
+        Calculate(size, splitSize);
+    }
+
+    Distribution(size_t matrixCols, size_t matrixRows, int rowsSplitCount) {
+        Calculate(matrixCols, matrixRows, rowsSplitCount);
+    }
+
+    void Calculate(int size, int splitSize) {
+        Sizes.resize(size);
+        Offsets.resize(size);
+
+        const int base = size / splitSize;
+        const int remaider = size % splitSize;
+
+        int offset{ 0 };
+        for (int i = 0; i < size; i++) {
+            int n = base + (i < remaider ? 1 : 0);
+            Sizes[i] = n;
+            Offsets[i] = offset;
+            offset += n;
+        }
+    }
+
+    void Calculate(size_t matrixCols, size_t matrixRows, int rowsSplitCount) {
+        Sizes.resize(rowsSplitCount);
+        Offsets.resize(rowsSplitCount);
+        const int base = matrixRows / rowsSplitCount;
+        const int reminder = matrixRows % rowsSplitCount;
+
+        int offset{ 0 };
+
+        for (int i = 0; i < rowsSplitCount; i++) {
+            const int rowsPerProcess = base + (i < reminder ? 1 : 0);
+            const int numsPerProcess = matrixCols * rowsPerProcess;
+            Sizes[i] = numsPerProcess;
+            Offsets[i] = offset;
+            offset += numsPerProcess;
+        }
+    }
+};
+
+double operator*(const std::vector<double>& A, const std::vector<double>& B) {
+    if (A.size() != B.size()) {
+        throw std::invalid_argument("Vector dimensions mismatch");
+    }
+    double result = 0;
+    for (size_t i = 0; i < A.size(); i++) {
+        result += A[i] * B[i];
+    }
+    return result;
+}
+
+std::vector<double> operator-(const std::vector<double>& A, const std::vector<double>& B) {
+    if (A.size() != B.size()) {
+        throw std::invalid_argument("Vector dimensions mismatch");
+    }
+    std::vector<double> result(A.size(), 0.0f);
+    for (size_t i = 0; i < A.size(); i++) {
+        result[i] = A[i] - B[i];
+    }
+    return result;
+}
+
+std::vector<double> operator*(double scalar, const std::vector<double>& vector) {
+    std::vector<double> result(vector.size());
+    for (size_t i = 0; i < vector.size(); i++) {
+        result[i] = scalar * vector[i];
+    }
+    return result;
+}
+
+std::vector<double>& operator-=(std::vector<double>& A, const std::vector<double>& B) {
+    if (A.size() != B.size()) {
+        throw std::invalid_argument("Vector dimensions mismatch");
+    }
+    for (size_t i = 0; i < A.size(); i++) {
+        A[i] -= B[i];
+    }
+    return A;
+}
+
+std::string CheckAnswer(const std::vector<double>& answers, double expectedAnswer) {
+    for (size_t i = 0; i < answers.size(); i++) {
+        if (std::fabs(answers[i] - expectedAnswer) > 0.0001) {
+            return "Wrong answer: expected " + std::to_string(expectedAnswer) + ", got " + std::to_string(answers[i]) +
+                   " at index " + std::to_string(i);
+        }
+    }
+    return "OK";
+}
+
+double Norm2(const std::vector<double>& vector) {
+    double sum{ 0.0f };
+    for (double element: vector) {
+        sum += element * element;
+    }
+    return std::sqrt(sum);
+}
+
+std::string GetCurrentDateTime() {
+    auto now = std::chrono::system_clock::now();
+    std::time_t now_time = std::chrono::system_clock::to_time_t(now);
+    return std::ctime(&now_time);
+}
+
+void PrintResult(std::ostream& out, const std::string& testName, int size, int rank, double durationSec,
+                 const std::vector<double>& res, double expectedAnswer) {
+    out << GetCurrentDateTime() <<  "Name: " << testName << ", Size: " << size << ", Rank: " << std::to_string(rank) << ", Time: " << durationSec << ", Status: " <<
+            CheckAnswer(res, expectedAnswer) << std::endl;
+}
+
+std::vector<double> SolveLinearEquation_Naive(const Matrix& matrixA, const std::vector<double>& vecB,
+                                             double epsilon, double tau) {
+    if (!matrixA.IsSquare() || vecB.size() != matrixA.GetRows()) {
+        throw std::invalid_argument("!matrix.IsSquare() || rightPart.size() != matrix.GetRows()");
+    }
+
+    const double normB = Norm2(vecB);
+    if (normB == 0) {
+        throw std::runtime_error("normB == 0");
+    }
+
+    std::vector<double> vecAx(vecB.size());
+    std::vector<double> vecX(vecB.size(), 0.0);
+
+    while (true) {
+        vecAx = matrixA * vecX;
+
+    }
+}
+
+int main(int argc, char** argv) {
+
+}
