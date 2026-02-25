@@ -430,15 +430,52 @@ std::vector<double> SolveLinearEquation_Mpi2(const Matrix& localMatrixA, int mat
         throw std::invalid_argument("localVecB.size() != kRowsPerCurrentProcess");
     }
 
-    std::vector<double> vecX(matrixSize, 0.0);
-    std::vector<double> localVecAx(kRowsPerCurrentProcess);
-    std::vector<double> localVecX(kRowsPerCurrentProcess, 0.0);
+    //std::vector<double> vecX(matrixSize, 0.0);
 
-    const Distribution axDistribution(matrixSize, size);
+    std::vector<double> localVecAx(kRowsPerCurrentProcess, 0.0);
+    std::vector<double> localVecX(kRowsPerCurrentProcess, 0.0);
+    const Distribution vectorDistribution(matrixSize, size);
+    int kMaxChunkSize = matrixSize / size + 1;
+    // for (int p = 0; p < size; ++p) {
+    //     kMaxChunkSize = std::max(kMaxChunkSize, vectorDistribution.GetSizeAt(p));
+    // }
+    std::vector<double> xBuffer(kMaxChunkSize, 0.0);
+
+    int owner = rank;
 
     while (true) {
         // 1) vector Ax = A * x
-        localVecAx = localMatrixA * vecX;
+        //localVecAx = localMatrixA * vecX;
+        // подготовка: поместить в xBuffer текущую локальную часть x
+        std::fill(xBuffer.begin(), xBuffer.end(), 0.0);
+
+        std::copy(localVecX.begin(), localVecX.end(), xBuffer.begin());
+        owner = rank;
+
+        // 3) localVecAx = localMatrixA * x (без полного vecX) — кольцевой обмен
+        std::fill(localVecAx.begin(), localVecAx.end(), 0.0); // ОЧЕНЬ важно: обнуляем перед накоплением
+
+        for (int step = 0; step < size; ++step) {
+            const int cols = vectorDistribution.GetSizeAt(owner);
+            const int colOffset = vectorDistribution.GetOffsetAt(owner);
+
+            // аккумулируем вклад текущего чанка xBuffer (cols валидных элементов в начале)
+            for (int i = 0; i < kRowsPerCurrentProcess; i++) {
+                double sum = 0.0;
+                for (int j = 0; j < cols; ++j) {
+                    sum += localMatrixA.At(i, j + colOffset) * xBuffer[j];
+                }
+                localVecAx[i] += sum;
+            }
+
+            // пересылка: отправляем наш xBuffer следующему и принимаем от предыдущего
+            int sendTo = (rank + 1) % size;
+            int recvFrom = (rank - 1 + size) % size;
+            MPI_Sendrecv_replace(xBuffer.data(), kMaxChunkSize, MPI_DOUBLE,
+                                 sendTo, 0, recvFrom, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+            owner = (owner - 1 + size) % size;
+        }
 
         // 2) Норма ||Ax - b||
         double localNorm = 0;
@@ -455,12 +492,12 @@ std::vector<double> SolveLinearEquation_Mpi2(const Matrix& localMatrixA, int mat
         }
         // 4) Обновление x
         localVecX -= tau * (localVecAx - localVecB);
-        MPI_Allgatherv(localVecX.data(), localVecX.size(),
-                       MPI_DOUBLE, vecX.data(), axDistribution.Sizes.data(),
-                       axDistribution.Offsets.data(), MPI_DOUBLE, MPI_COMM_WORLD);
+        // MPI_Allgatherv(localVecX.data(), localVecX.size(),
+        //                MPI_DOUBLE, vecX.data(), vectorDistribution.Sizes.data(),
+        //                vectorDistribution.Offsets.data(), MPI_DOUBLE, MPI_COMM_WORLD);
     }
     //std::cout << iterCount << " iterations" << std::endl;
-    return vecX;
+    return localVecX;
 }
 
 std::string GetCurrentDateTime() {
@@ -500,8 +537,8 @@ int main(int argc, char** argv) {
     }
 #endif
 #if 1
-    const int N = 8000;
-    const double tau = 0.000001;
+    const int N = 800;
+    const double tau = 0.0001;
     const double epsilon{ std::pow(10, -5) };
 #endif
     const int kRowsPerCurrentProcess = N / size + (rank < (N % size) ? 1 : 0);
@@ -515,7 +552,7 @@ int main(int argc, char** argv) {
     Timer timer;
     std::vector<double> result;
     double durationSec = 0;
-#if 1
+#if 0
     b = std::vector<double>(N, N + 1);
     timer.Reset();
     result = SolveLinearEquation_Mpi1(localMatrixA, N, b, epsilon, tau, rank, size);
@@ -524,11 +561,17 @@ int main(int argc, char** argv) {
         PrintResult(std::cout, "task1_new", size, rank, durationSec, result, 1);
     }
 #endif
-#if 0
+#if 1
     b = std::vector<double>(kRowsPerCurrentProcess, N + 1);
     timer.Reset();
     result = SolveLinearEquation_Mpi2(localMatrixA, N, b, epsilon, tau, rank, size);
     durationSec = timer.GetDurationSec();
+    std::string msg = CheckAnswer(result, 1);
+    if (msg != "OK") {
+        std::cout << "SolveLinearEquation_Mpi2 CheckAnswer failed on rank " << rank << " " << msg << std::endl;
+        MPI_Finalize();
+        return 0;
+    }
     if (rank == 0) {
         PrintResult(std::cout, "task2_new", size, rank, durationSec, result, 1);
     }
