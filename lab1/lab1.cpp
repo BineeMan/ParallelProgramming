@@ -9,22 +9,20 @@
 
 class Timer {
 public:
-    void Reset() {
-        clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+    Timer() {
+        Reset();
     }
 
-    Timer() {
-        clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+    void Reset() {
+        start = MPI_Wtime();
     }
 
     double GetDurationSec() const {
-        struct timespec end{ };
-        clock_gettime(CLOCK_MONOTONIC_RAW, &end);
-        return end.tv_sec - start.tv_sec + 0.000000001 * (end.tv_nsec - start.tv_nsec);
+        return MPI_Wtime() - start;
     }
 
 private:
-    struct timespec start{ };
+    double start{0.0};
 };
 
 class Matrix {
@@ -520,15 +518,13 @@ int main(int argc, char** argv) {
     }
 #endif
 #if 0
-    const int N = 800;
-    const double tau = 0.00001;
+    const int N = 8000;
+    const double tau = 0.0001;
 #endif
     const double epsilon{ std::pow(10, -5) };
     const int kRowsPerCurrentProcess = N / size + (rank < (N % size) ? 1 : 0);
-    // вычисляем startRow
-    int base = N / size;
-    int rem  = N % size;
-    int startRow = base * rank + std::min(rank, rem); // или через Distribution
+
+    const int startRow = (N / size) * rank + std::min(rank, N % size);
 
     Matrix localMatrixA(kRowsPerCurrentProcess, N, 1.0);
     for (int i = 0; i < kRowsPerCurrentProcess; ++i) {
