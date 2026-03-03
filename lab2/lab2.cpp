@@ -4,27 +4,6 @@
 #include <stdexcept>
 #include <thread>
 #include <vector>
-#include <mpi.h>
-
-class Timer {
-public:
-    void Reset() {
-        clock_gettime(CLOCK_MONOTONIC_RAW, &start);
-    }
-
-    Timer() {
-        clock_gettime(CLOCK_MONOTONIC_RAW, &start);
-    }
-
-    double GetDurationSec() const {
-        struct timespec end{ };
-        clock_gettime(CLOCK_MONOTONIC_RAW, &end);
-        return end.tv_sec - start.tv_sec + 0.000000001 * (end.tv_nsec - start.tv_nsec);
-    }
-
-private:
-    struct timespec start{ };
-};
 
 class Matrix {
 private:
@@ -231,62 +210,6 @@ public:
     }
 };
 
-struct Distribution {
-    std::vector<int> Sizes;
-    std::vector<int> Offsets;
-
-    int GetSizeAt(int rank) const {
-        return Sizes.at(rank);
-    }
-
-    int GetOffsetAt(int rank) const {
-        return Offsets.at(rank);
-    }
-
-    Distribution() = default;
-
-    Distribution(int size, int splitSize) {
-        Calculate(size, splitSize);
-    }
-
-    Distribution(size_t matrixCols, size_t matrixRows, int rowsSplitCount) {
-        Calculate(matrixCols, matrixRows, rowsSplitCount);
-    }
-
-    void Calculate(int size, int splitSize) {
-        Sizes.resize(size);
-        Offsets.resize(size);
-
-        const int base = size / splitSize;
-        const int remaider = size % splitSize;
-
-        int offset{ 0 };
-        for (int i = 0; i < size; i++) {
-            int n = base + (i < remaider ? 1 : 0);
-            Sizes[i] = n;
-            Offsets[i] = offset;
-            offset += n;
-        }
-    }
-
-    void Calculate(size_t matrixCols, size_t matrixRows, int rowsSplitCount) {
-        Sizes.resize(rowsSplitCount);
-        Offsets.resize(rowsSplitCount);
-        const int base = matrixRows / rowsSplitCount;
-        const int reminder = matrixRows % rowsSplitCount;
-
-        int offset{ 0 };
-
-        for (int i = 0; i < rowsSplitCount; i++) {
-            const int rowsPerProcess = base + (i < reminder ? 1 : 0);
-            const int numsPerProcess = matrixCols * rowsPerProcess;
-            Sizes[i] = numsPerProcess;
-            Offsets[i] = offset;
-            offset += numsPerProcess;
-        }
-    }
-};
-
 double operator*(const std::vector<double>& A, const std::vector<double>& B) {
     if (A.size() != B.size()) {
         throw std::invalid_argument("Vector dimensions mismatch");
@@ -353,30 +276,75 @@ std::string GetCurrentDateTime() {
 
 void PrintResult(std::ostream& out, const std::string& testName, int size, int rank, double durationSec,
                  const std::vector<double>& res, double expectedAnswer) {
-    out << GetCurrentDateTime() <<  "Name: " << testName << ", Size: " << size << ", Rank: " << std::to_string(rank) << ", Time: " << durationSec << ", Status: " <<
+    out << GetCurrentDateTime() << "Name: " << testName << ", Size: " << size << ", Rank: " << std::to_string(rank) <<
+            ", Time: " << durationSec << ", Status: " <<
             CheckAnswer(res, expectedAnswer) << std::endl;
 }
 
-std::vector<double> SolveLinearEquation_Naive(const Matrix& matrixA, const std::vector<double>& vecB,
-                                             double epsilon, double tau) {
+std::vector<double> SolveLinearEquation_Naive(const Matrix& matrixA,
+                                              const std::vector<double>& vecB,
+                                              double epsilon, double tau) {
     if (!matrixA.IsSquare() || vecB.size() != matrixA.GetRows()) {
         throw std::invalid_argument("!matrix.IsSquare() || rightPart.size() != matrix.GetRows()");
     }
 
-    const double normB = Norm2(vecB);
-    if (normB == 0) {
+    const double kNormB = Norm2(vecB);
+    if (kNormB == 0) {
         throw std::runtime_error("normB == 0");
     }
-
-    std::vector<double> vecAx(vecB.size());
-    std::vector<double> vecX(vecB.size(), 0.0);
-
+    const size_t kVecSize = vecB.size();
+    std::vector<double> vecAx(kVecSize, 0.0);
+    std::vector<double> vecX(kVecSize, 0.0);
+    std::vector<double> vecAxMinusB(kVecSize, 0.0);
+    const int kMaxIterations = 1000;
+    int iterationCount = 0;
     while (true) {
-        vecAx = matrixA * vecX;
+        // A * x
+        for (size_t i = 0; i < matrixA.GetRows(); i++) {
+            double sum{ 0.0 };
+            for (size_t j = 0; j < matrixA.GetCols(); j++) {
+                sum += matrixA.At(i, j) * vecB.at(j);
+            }
+            vecAx[i] = sum;
+        }
 
+        //Ax - b
+        double sum = 0.0;
+        for (size_t i = 0; i < vecAx.size(); i++) {
+            vecAxMinusB[i] = vecAx[i] - vecB[i];
+            sum += vecAxMinusB[i] * vecAxMinusB[i];
+        }
+
+        if (sqrt(sum) / kNormB < epsilon) {
+            break;
+        }
+
+        for (size_t i = 0; i < vecX.size(); i++) {
+            vecX[i] = vecX[i] - tau * vecAxMinusB[i];
+        }
+
+        if (iterationCount > kMaxIterations) {
+            throw std::runtime_error("iterationCount > kMaxIterations");
+        }
+        iterationCount++;
     }
 }
 
 int main(int argc, char** argv) {
+#if 0
+    int N = 0;
+    double tau = 0.0;
+    tau = atof(argv[2]);
+    N = atoi(argv[1]);
+#endif
+#if 1
+    const int N = 800;
+    const double tau = 0.0001;
+#endif
+
+    const double epsilon{ std::pow(10, -5) };
+
+    Matrix matrixA(N, N, 1.0);
+    std::vector<double> vecB(N, N+1);
 
 }
