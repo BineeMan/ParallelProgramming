@@ -5,6 +5,26 @@
 #include <thread>
 #include <vector>
 
+class Timer {
+public:
+    void Reset() {
+        clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+    }
+
+    Timer() {
+        clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+    }
+
+    double GetDurationSec() const {
+        struct timespec end{ };
+        clock_gettime(CLOCK_MONOTONIC_RAW, &end);
+        return end.tv_sec - start.tv_sec + 0.000000001 * (end.tv_nsec - start.tv_nsec);
+    }
+
+private:
+    struct timespec start{ };
+};
+
 class Matrix {
 private:
     std::vector<double> Data;
@@ -274,10 +294,9 @@ std::string GetCurrentDateTime() {
     return std::ctime(&now_time);
 }
 
-void PrintResult(std::ostream& out, const std::string& testName, int size, int rank, double durationSec,
+void PrintResult(std::ostream& out, const std::string& testName, double durationSec,
                  const std::vector<double>& res, double expectedAnswer) {
-    out << GetCurrentDateTime() << "Name: " << testName << ", Size: " << size << ", Rank: " << std::to_string(rank) <<
-            ", Time: " << durationSec << ", Status: " <<
+    out << GetCurrentDateTime() << "Name: " << testName << ", Time: " << durationSec << ", Status: " <<
             CheckAnswer(res, expectedAnswer) << std::endl;
 }
 
@@ -303,7 +322,7 @@ std::vector<double> SolveLinearEquation_Naive(const Matrix& matrixA,
         for (size_t i = 0; i < matrixA.GetRows(); i++) {
             double sum{ 0.0 };
             for (size_t j = 0; j < matrixA.GetCols(); j++) {
-                sum += matrixA.At(i, j) * vecB.at(j);
+                sum += matrixA.At(i, j) * vecX.at(j);
             }
             vecAx[i] = sum;
         }
@@ -318,6 +337,7 @@ std::vector<double> SolveLinearEquation_Naive(const Matrix& matrixA,
         if (sqrt(sum) / kNormB < epsilon) {
             break;
         }
+       //std::cout << sqrt(sum) << std::endl;
 
         for (size_t i = 0; i < vecX.size(); i++) {
             vecX[i] = vecX[i] - tau * vecAxMinusB[i];
@@ -328,6 +348,7 @@ std::vector<double> SolveLinearEquation_Naive(const Matrix& matrixA,
         }
         iterationCount++;
     }
+    return vecX;
 }
 
 int main(int argc, char** argv) {
@@ -338,13 +359,22 @@ int main(int argc, char** argv) {
     N = atoi(argv[1]);
 #endif
 #if 1
-    const int N = 800;
+    const int N = 8000;
     const double tau = 0.0001;
 #endif
 
-    const double epsilon{ std::pow(10, -5) };
+    const double epsilon = std::pow(10, -5);
 
     Matrix matrixA(N, N, 1.0);
-    std::vector<double> vecB(N, N+1);
-
+    std::vector<double> vecB(N, N + 1);
+    for (size_t i = 0; i < N; i++) {
+        matrixA.At(i, i) = 2.0;
+    }
+    Timer timer;
+    std::vector<double> result;
+    double duration = 0;
+    timer.Reset();
+    result = SolveLinearEquation_Naive(matrixA, vecB, epsilon, tau);
+    duration = timer.GetDurationSec();
+    PrintResult(std::cout, "Naive", duration, result, 1.0);
 }
