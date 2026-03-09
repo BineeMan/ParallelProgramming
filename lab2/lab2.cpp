@@ -39,36 +39,7 @@ public:
 
     Matrix(Matrix&& other) = default;
 
-    Matrix(double* buffer, int count, size_t rows, size_t cols) : Data(buffer, buffer + count) {
-        if (count <= 0) {
-            throw std::invalid_argument("Count is zero");
-        }
-        Rows = rows;
-        Cols = cols;
-    }
-
-    Matrix(size_t rows, size_t cols) {
-        Rows = rows;
-        Cols = cols;
-        Data.resize(rows * cols, 0.0f);
-    }
-
     Matrix(size_t rows, size_t cols, double value) {
-        Rows = rows;
-        Cols = cols;
-        Data.resize(rows * cols, value);
-    }
-
-    Matrix(const std::vector<double>& vector, size_t rows, size_t cols) {
-        if (vector.size() != rows * cols) {
-            throw std::out_of_range("Vector size does not match matrix size");
-        }
-        Data = vector;
-        Rows = rows;
-        Cols = cols;
-    }
-
-    void Resize(size_t rows, size_t cols, double value) {
         Rows = rows;
         Cols = cols;
         Data.resize(rows * cols, value);
@@ -97,76 +68,6 @@ public:
         return Data[i * Cols + j];
     }
 
-    Matrix Multiply(const Matrix& other) const {
-        if (GetCols() != other.GetRows()) {
-            throw std::invalid_argument("Matrix dimensions mismatch");
-        }
-
-        Matrix result(GetRows(), other.GetCols());
-
-        for (size_t i = 0; i < GetRows(); i++) {
-            for (size_t j = 0; j < other.GetCols(); j++) {
-                double sum{ 0.0f };
-                for (size_t k = 0; k < GetCols(); k++) {
-                    sum += this->At(i, k) * other.At(k, j);
-                }
-                result.At(i, j) = sum;
-            }
-        }
-        return result;
-    }
-
-    Matrix Add(const Matrix& other) const {
-        CheckSize(other);
-
-        Matrix result(GetRows(), GetCols());
-        for (size_t i = 0; i < GetRows(); i++) {
-            for (size_t j = 0; j < GetCols(); j++) {
-                result.At(i, j) = this->At(i, j) + other.At(i, j);
-            }
-        }
-
-        return result;
-    }
-
-    Matrix Subtract(const Matrix& other) const {
-        CheckSize(other);
-
-        Matrix result(GetRows(), GetCols());
-        for (size_t i = 0; i < GetRows(); i++) {
-            for (size_t j = 0; j < GetCols(); j++) {
-                result.At(i, j) = this->At(i, j) - other.At(i, j);
-            }
-        }
-
-        return result;
-    }
-
-    Matrix MultiplyScalar(double scalar) const {
-        Matrix result(GetRows(), GetCols());
-        for (size_t i = 0; i < GetRows(); i++) {
-            for (size_t j = 0; j < GetCols(); j++) {
-                result.At(i, j) = this->At(i, j) * scalar;
-            }
-        }
-        return result;
-    }
-
-    std::vector<double> operator*(const std::vector<double>& other) const {
-        if (GetCols() > other.size()) {
-            throw std::invalid_argument("Vector dimensions mismatch");
-        }
-
-        std::vector<double> result(GetRows(), 0.0f);
-
-        for (int i = 0; i < GetRows(); i++) {
-            for (size_t j = 0; j < GetCols(); j++) {
-                result[i] += this->At(i, j) * other[j];
-            }
-        }
-        return result;
-    }
-
     size_t GetRows() const {
         return Rows;
     }
@@ -192,84 +93,11 @@ public:
         }
     }
 
-    bool IsSameSize(const Matrix& other) const {
-        return GetCols() == other.GetCols() && GetRows() == other.GetRows();
-    }
-
-    void CheckSize(const Matrix& other) const {
-        if (!IsSameSize(other)) {
-            throw std::out_of_range("Matrix dimensions mismatch");
-        }
-    }
-
     bool IsSquare() const {
         return GetRows() == GetCols();
     }
 
-    double GetMaxRowSum() const {
-        double maxSum{ 0.0f };
-        for (size_t i = 0; i < GetRows(); i++) {
-            double currentSum{ 0.0f };
-            for (size_t j = 0; j < GetCols(); j++) {
-                currentSum += std::abs(this->At(i, j));
-            }
-            maxSum = std::max(maxSum, currentSum);
-        }
-        return maxSum;
-    }
-
-    double GetMinRowSum() const {
-        double minSum{ 0.0f };
-        for (size_t i = 0; i < GetRows(); i++) {
-            double currentSum{ 0.0f };
-            for (size_t j = 0; j < GetCols(); j++) {
-                currentSum += std::abs(this->At(i, j));
-            }
-            minSum = std::min(minSum, currentSum);
-        }
-        return minSum;
-    }
 };
-
-double operator*(const std::vector<double>& A, const std::vector<double>& B) {
-    if (A.size() != B.size()) {
-        throw std::invalid_argument("Vector dimensions mismatch");
-    }
-    double result = 0;
-    for (size_t i = 0; i < A.size(); i++) {
-        result += A[i] * B[i];
-    }
-    return result;
-}
-
-std::vector<double> operator-(const std::vector<double>& A, const std::vector<double>& B) {
-    if (A.size() != B.size()) {
-        throw std::invalid_argument("Vector dimensions mismatch");
-    }
-    std::vector<double> result(A.size(), 0.0f);
-    for (size_t i = 0; i < A.size(); i++) {
-        result[i] = A[i] - B[i];
-    }
-    return result;
-}
-
-std::vector<double> operator*(double scalar, const std::vector<double>& vector) {
-    std::vector<double> result(vector.size());
-    for (size_t i = 0; i < vector.size(); i++) {
-        result[i] = scalar * vector[i];
-    }
-    return result;
-}
-
-std::vector<double>& operator-=(std::vector<double>& A, const std::vector<double>& B) {
-    if (A.size() != B.size()) {
-        throw std::invalid_argument("Vector dimensions mismatch");
-    }
-    for (size_t i = 0; i < A.size(); i++) {
-        A[i] -= B[i];
-    }
-    return A;
-}
 
 std::string CheckAnswer(const std::vector<double>& answers, double expectedAnswer) {
     for (size_t i = 0; i < answers.size(); i++) {
@@ -295,10 +123,10 @@ std::string GetCurrentDateTime() {
     return std::ctime(&now_time);
 }
 
-void PrintResult(std::ostream& out, const std::string& testName, double durationSec,
+void PrintResult(std::ostream& out, const std::string& testName, double durationSec, int threadNum,
                  const std::vector<double>& res, double expectedAnswer) {
-    out << GetCurrentDateTime() << "Name: " << testName << ", Time: " << durationSec << ", Status: " <<
-            CheckAnswer(res, expectedAnswer) << std::endl;
+    out << GetCurrentDateTime() << "Name: " << testName << ", Thread num: " << threadNum << ", Time: " << durationSec << ", Status: " <<
+            CheckAnswer(res, expectedAnswer) << std::endl  << std::endl;
 }
 
 std::vector<double> SolveLinearEquation_Naive(const Matrix& matrixA,
@@ -316,7 +144,7 @@ std::vector<double> SolveLinearEquation_Naive(const Matrix& matrixA,
     std::vector<double> vecAx(kVecSize, 0.0);
     std::vector<double> vecX(kVecSize, 0.0);
     std::vector<double> vecAxMinusB(kVecSize, 0.0);
-    const int kMaxIterations = 1000;
+    const int kMaxIterations = 200;
     int iterationCount = 0;
     while (true) {
         // A * x
@@ -337,7 +165,7 @@ std::vector<double> SolveLinearEquation_Naive(const Matrix& matrixA,
         if (sqrt(sum) / kNormB < epsilon) {
             break;
         }
-       //std::cout << sqrt(sum) << std::endl;
+        std::cout << sqrt(sum) << std::endl;
 
         for (size_t i = 0; i < vecX.size(); i++) {
             vecX[i] = vecX[i] - tau * vecAxMinusB[i];
@@ -481,17 +309,128 @@ std::vector<double> SolveLinearEquation_ParallelB(const Matrix& matrixA,
     return vecX;
 }
 
+std::vector<double> SolveLinearEquation_Schedule(const Matrix& matrixA,
+                                              const std::vector<double>& vecB,
+                                              double epsilon, double tau) {
+    if (!matrixA.IsSquare() || vecB.size() != matrixA.GetRows()) {
+        throw std::invalid_argument("!matrix.IsSquare() || rightPart.size() != matrix.GetRows()");
+    }
+
+    const double kNormB = Norm2(vecB);
+    if (kNormB == 0) {
+        throw std::runtime_error("normB == 0");
+    }
+    const size_t kVecSize = vecB.size();
+    std::vector<double> vecAx(kVecSize, 0.0);
+    std::vector<double> vecX(kVecSize, 0.0);
+    std::vector<double> vecAxMinusB(kVecSize, 0.0);
+    const int kMaxIterations = 1000;
+    const int kChunckSize = 16;
+    int iterationCount = 0;
+    #define SCHEDULE_STATIC 1
+    //#define SCHEDULE_DYNAMIC 1
+    //#define SCHEDULE_GUIDED 1
+    //#define SCHEDULE_AUTO 1
+    while (true) {
+        // A * x
+
+        #ifdef SCHEDULE_STATIC
+        #pragma omp parallel for schedule(static, kChunckSize)
+        #endif
+
+        #ifdef SCHEDULE_DYNAMIC
+        #pragma omp parallel for schedule(dynamic, kChunckSize)
+        #endif
+
+        #ifdef SCHEDULE_GUIDED
+        #pragma omp parallel for schedule(guided, kChunckSize)
+        #endif
+
+        #ifdef SCHEDULE_AUTO
+        #pragma omp parallel for schedule(auto)
+        #endif
+
+        for (size_t i = 0; i < matrixA.GetRows(); i++) {
+            vecAx[i] = 0;
+            for (size_t j = 0; j < matrixA.GetCols(); j++) {
+                vecAx[i] += matrixA.At(i, j) * vecX.at(j);
+            }
+        }
+
+        //Ax - b
+        double sum = 0.0;
+        #ifdef SCHEDULE_STATIC
+        #pragma omp parallel for reduction(+:sum) schedule(static, kChunckSize)
+        #endif
+
+        #ifdef SCHEDULE_DYNAMIC
+        #pragma omp parallel for reduction(+:sum) schedule(dynamic, kChunckSize)
+        #endif
+
+        #ifdef SCHEDULE_GUIDED
+        #pragma omp parallel for reduction(+:sum) schedule(guided, kChunckSize)
+        #endif
+
+        #ifdef SCHEDULE_AUTO
+        #pragma omp parallel for reduction(+:sum) schedule(auto)
+        #endif
+
+        for (size_t i = 0; i < vecAx.size(); i++) {
+            vecAxMinusB[i] = vecAx[i] - vecB[i];
+            sum += vecAxMinusB[i] * vecAxMinusB[i];
+        }
+
+        if (sqrt(sum) / kNormB < epsilon) {
+            break;
+        }
+#pragma omp master
+        {
+            std::cout << sqrt(sum) << std::endl;
+        }
+#pragma omp barrier
+
+        //std::cout << sqrt(sum) << std::endl;
+        #ifdef SCHEDULE_STATIC
+        #pragma omp parallel for schedule(static, kChunckSize)
+        #endif
+
+        #ifdef SCHEDULE_DYNAMIC
+        #pragma omp parallel for schedule(dynamic, kChunckSize)
+        #endif
+
+        #ifdef SCHEDULE_GUIDED
+        #pragma omp parallel for schedule(guided, kChunckSize)
+        #endif
+
+        #ifdef SCHEDULE_AUTO
+        #pragma omp parallel for schedule(auto)
+        #endif
+
+        for (size_t i = 0; i < vecX.size(); i++) {
+            vecX[i] = vecX[i] - tau * vecAxMinusB[i];
+        }
+
+        if (iterationCount > kMaxIterations) {
+            throw std::runtime_error("iterationCount > kMaxIterations");
+        }
+        iterationCount++;
+    }
+    return vecX;
+}
+
 int main(int argc, char** argv) {
-    omp_set_num_threads(4);
+
 #if 0
-    int N = 0;
-    double tau = 0.0;
-    tau = atof(argv[2]);
-    N = atoi(argv[1]);
+    if (arc != 3) {
+        std::cerr << "arc != 3" << std::endl;
+        return 1;
+    }
+    int N = atof(argv[2]);
+    double tau = atoi(argv[1]);
 #endif
 #if 1
-    const int N = 13000;
-    const double tau = 0.0001;
+    const int N = 30000;
+    const double tau = 0.00001;
 #endif
 
     const double epsilon = std::pow(10, -5);
@@ -504,26 +443,44 @@ int main(int argc, char** argv) {
     Timer timer;
     std::vector<double> result;
     double duration = 0;
+    #if 0
+        timer.Reset();
+        result = SolveLinearEquation_Naive(matrixA, vecB, epsilon, tau);
+        duration = timer.GetDurationSec();
+        PrintResult(std::cout,  "Naive", duration, 1, result, 1.0);
+    #endif
 
-#if 1
-    timer.Reset();
-    result = SolveLinearEquation_Naive(matrixA, vecB, epsilon, tau);
-    duration = timer.GetDurationSec();
-    PrintResult(std::cout, "Naive", duration, result, 1.0);
+#if 0
+    const std::vector<int> NumThreads = { 1, 2, 4, 6, 8, 12, 16, 32 };
+    for (int numThread : NumThreads) {
+        omp_set_num_threads(numThread);
+        std::vector<double> durations;
+    #if 1
+        timer.Reset();
+        result = SolveLinearEquation_ParallelA(matrixA, vecB, epsilon, tau);
+        duration = timer.GetDurationSec();
+        durations.push_back(duration);
+        //PrintResult(std::cout, "ParallelA", duration, omp_get_max_threads(), result, 1.0);
+    #endif
+
+    #if 1
+        timer.Reset();
+        result = SolveLinearEquation_ParallelB(matrixA, vecB, epsilon, tau);
+        duration = timer.GetDurationSec();
+        durations.push_back(duration);
+        //PrintResult(std::cout, "ParallelB", duration, omp_get_max_threads(), result, 1.0);
+    #endif
+
+        std::cout << numThread << "," << durations.at(0) << "," << durations.at(1) << std::endl;
+    }
 #endif
 
 #if 1
+    omp_set_num_threads(8);
     timer.Reset();
-    result = SolveLinearEquation_ParallelA(matrixA, vecB, epsilon, tau);
+    result = SolveLinearEquation_Schedule(matrixA, vecB, epsilon, tau);
     duration = timer.GetDurationSec();
-    PrintResult(std::cout, "ParallelA", duration, result, 1.0);
-#endif
-
-#if 1
-    timer.Reset();
-    result = SolveLinearEquation_ParallelB(matrixA, vecB, epsilon, tau);
-    duration = timer.GetDurationSec();
-    PrintResult(std::cout, "ParallelB", duration, result, 1.0);
+    PrintResult(std::cout, "Parallel_Schedule", duration, omp_get_max_threads(), result, 1.0);
 #endif
 
 }
