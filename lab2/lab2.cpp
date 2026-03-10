@@ -165,7 +165,7 @@ std::vector<double> SolveLinearEquation_Naive(const Matrix& matrixA,
         if (sqrt(sum) / kNormB < epsilon) {
             break;
         }
-        std::cout << sqrt(sum) << std::endl;
+        //std::cout << sqrt(sum) << std::endl;
 
         for (size_t i = 0; i < vecX.size(); i++) {
             vecX[i] = vecX[i] - tau * vecAxMinusB[i];
@@ -420,18 +420,19 @@ std::vector<double> SolveLinearEquation_Schedule(const Matrix& matrixA,
 
 int main(int argc, char** argv) {
 
-#if 0
-    if (arc != 3) {
+#if 1
+    if (argc != 3) {
         std::cerr << "arc != 3" << std::endl;
         return 1;
     }
-    int N = atof(argv[2]);
-    double tau = atoi(argv[1]);
+    int N = std::stoi(argv[1]);
+    double tau = std::stod(argv[2]);
 #endif
-#if 1
+#if 0
     const int N = 30000;
     const double tau = 0.00001;
 #endif
+    std::cout << "N = " << N << ", tau = " << tau << std::endl;
 
     const double epsilon = std::pow(10, -5);
 
@@ -443,14 +444,14 @@ int main(int argc, char** argv) {
     Timer timer;
     std::vector<double> result;
     double duration = 0;
-    #if 0
+    #if 1
         timer.Reset();
         result = SolveLinearEquation_Naive(matrixA, vecB, epsilon, tau);
         duration = timer.GetDurationSec();
         PrintResult(std::cout,  "Naive", duration, 1, result, 1.0);
     #endif
 
-#if 0
+#if 1
     const std::vector<int> NumThreads = { 1, 2, 4, 6, 8, 12, 16, 32 };
     for (int numThread : NumThreads) {
         omp_set_num_threads(numThread);
@@ -475,7 +476,7 @@ int main(int argc, char** argv) {
     }
 #endif
 
-#if 1
+#if 0
     omp_set_num_threads(8);
     timer.Reset();
     result = SolveLinearEquation_Schedule(matrixA, vecB, epsilon, tau);
