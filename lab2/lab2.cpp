@@ -325,25 +325,25 @@ std::vector<double> SolveLinearEquation_Schedule(const Matrix& matrixA,
     std::vector<double> vecX(kVecSize, 0.0);
     std::vector<double> vecAxMinusB(kVecSize, 0.0);
     const int kMaxIterations = 1000;
-    const int kChunckSize = 16;
+    const int chunckSize = 16;
     int iterationCount = 0;
-    #define SCHEDULE_STATIC 1
-    //#define SCHEDULE_DYNAMIC 1
+    //#define SCHEDULE_STATIC 1
+    #define SCHEDULE_DYNAMIC 1
     //#define SCHEDULE_GUIDED 1
     //#define SCHEDULE_AUTO 1
     while (true) {
         // A * x
 
         #ifdef SCHEDULE_STATIC
-        #pragma omp parallel for schedule(static, kChunckSize)
+        #pragma omp parallel for schedule(static, chunckSize)
         #endif
 
         #ifdef SCHEDULE_DYNAMIC
-        #pragma omp parallel for schedule(dynamic, kChunckSize)
+        #pragma omp parallel for schedule(dynamic, chunckSize)
         #endif
 
         #ifdef SCHEDULE_GUIDED
-        #pragma omp parallel for schedule(guided, kChunckSize)
+        #pragma omp parallel for schedule(guided, chunckSize)
         #endif
 
         #ifdef SCHEDULE_AUTO
@@ -360,15 +360,15 @@ std::vector<double> SolveLinearEquation_Schedule(const Matrix& matrixA,
         //Ax - b
         double sum = 0.0;
         #ifdef SCHEDULE_STATIC
-        #pragma omp parallel for reduction(+:sum) schedule(static, kChunckSize)
+        #pragma omp parallel for reduction(+:sum) schedule(static, chunckSize)
         #endif
 
         #ifdef SCHEDULE_DYNAMIC
-        #pragma omp parallel for reduction(+:sum) schedule(dynamic, kChunckSize)
+        #pragma omp parallel for reduction(+:sum) schedule(dynamic, chunckSize)
         #endif
 
         #ifdef SCHEDULE_GUIDED
-        #pragma omp parallel for reduction(+:sum) schedule(guided, kChunckSize)
+        #pragma omp parallel for reduction(+:sum) schedule(guided, chunckSize)
         #endif
 
         #ifdef SCHEDULE_AUTO
@@ -383,23 +383,17 @@ std::vector<double> SolveLinearEquation_Schedule(const Matrix& matrixA,
         if (sqrt(sum) / kNormB < epsilon) {
             break;
         }
-#pragma omp master
-        {
-            std::cout << sqrt(sum) << std::endl;
-        }
-#pragma omp barrier
-
         //std::cout << sqrt(sum) << std::endl;
         #ifdef SCHEDULE_STATIC
-        #pragma omp parallel for schedule(static, kChunckSize)
+        #pragma omp parallel for schedule(static, chunckSize)
         #endif
 
         #ifdef SCHEDULE_DYNAMIC
-        #pragma omp parallel for schedule(dynamic, kChunckSize)
+        #pragma omp parallel for schedule(dynamic, chunckSize)
         #endif
 
         #ifdef SCHEDULE_GUIDED
-        #pragma omp parallel for schedule(guided, kChunckSize)
+        #pragma omp parallel for schedule(guided, chunckSize)
         #endif
 
         #ifdef SCHEDULE_AUTO
@@ -416,6 +410,185 @@ std::vector<double> SolveLinearEquation_Schedule(const Matrix& matrixA,
         iterationCount++;
     }
     return vecX;
+}
+
+std::vector<double> SolveLinearEquation_Static(const Matrix& matrixA,
+                                              const std::vector<double>& vecB,
+                                              double epsilon, double tau,
+                                              int chunckSize) {
+    if (!matrixA.IsSquare() || vecB.size() != matrixA.GetRows()) {
+        throw std::invalid_argument("!matrix.IsSquare() || rightPart.size() != matrix.GetRows()");
+    }
+
+    const double kNormB = Norm2(vecB);
+    if (kNormB == 0) {
+        throw std::runtime_error("normB == 0");
+    }
+    const size_t kVecSize = vecB.size();
+    std::vector<double> vecAx(kVecSize, 0.0);
+    std::vector<double> vecX(kVecSize, 0.0);
+    std::vector<double> vecAxMinusB(kVecSize, 0.0);
+    const int kMaxIterations = 1000;
+    //const int chunckSize = 16;
+    int iterationCount = 0;
+
+    while (true) {
+
+        #pragma omp parallel for schedule(static, chunckSize)
+        for (size_t i = 0; i < matrixA.GetRows(); i++) {
+            vecAx[i] = 0;
+            for (size_t j = 0; j < matrixA.GetCols(); j++) {
+                vecAx[i] += matrixA.At(i, j) * vecX.at(j);
+            }
+        }
+
+        //Ax - b
+        double sum = 0.0;
+
+        #pragma omp parallel for reduction(+:sum) schedule(static, chunckSize)
+        for (size_t i = 0; i < vecAx.size(); i++) {
+            vecAxMinusB[i] = vecAx[i] - vecB[i];
+            sum += vecAxMinusB[i] * vecAxMinusB[i];
+        }
+
+        if (sqrt(sum) / kNormB < epsilon) {
+            break;
+        }
+
+        #pragma omp parallel for schedule(static, chunckSize)
+        for (size_t i = 0; i < vecX.size(); i++) {
+            vecX[i] = vecX[i] - tau * vecAxMinusB[i];
+        }
+
+        if (iterationCount > kMaxIterations) {
+            throw std::runtime_error("iterationCount > kMaxIterations");
+        }
+        iterationCount++;
+    }
+    return vecX;
+}
+
+std::vector<double> SolveLinearEquation_Dynamic(const Matrix& matrixA,
+                                              const std::vector<double>& vecB,
+                                              double epsilon, double tau,
+                                              int chunckSize) {
+    if (!matrixA.IsSquare() || vecB.size() != matrixA.GetRows()) {
+        throw std::invalid_argument("!matrix.IsSquare() || rightPart.size() != matrix.GetRows()");
+    }
+
+    const double kNormB = Norm2(vecB);
+    if (kNormB == 0) {
+        throw std::runtime_error("normB == 0");
+    }
+    const size_t kVecSize = vecB.size();
+    std::vector<double> vecAx(kVecSize, 0.0);
+    std::vector<double> vecX(kVecSize, 0.0);
+    std::vector<double> vecAxMinusB(kVecSize, 0.0);
+    const int kMaxIterations = 1000;
+    //const int chunckSize = 16;
+    int iterationCount = 0;
+
+    while (true) {
+
+#pragma omp parallel for schedule(dynamic, chunckSize)
+        for (size_t i = 0; i < matrixA.GetRows(); i++) {
+            vecAx[i] = 0;
+            for (size_t j = 0; j < matrixA.GetCols(); j++) {
+                vecAx[i] += matrixA.At(i, j) * vecX.at(j);
+            }
+        }
+
+        //Ax - b
+        double sum = 0.0;
+
+#pragma omp parallel for reduction(+:sum) schedule(dynamic, chunckSize)
+        for (size_t i = 0; i < vecAx.size(); i++) {
+            vecAxMinusB[i] = vecAx[i] - vecB[i];
+            sum += vecAxMinusB[i] * vecAxMinusB[i];
+        }
+
+        if (sqrt(sum) / kNormB < epsilon) {
+            break;
+        }
+
+#pragma omp parallel for schedule(dynamic, chunckSize)
+        for (size_t i = 0; i < vecX.size(); i++) {
+            vecX[i] = vecX[i] - tau * vecAxMinusB[i];
+        }
+
+        if (iterationCount > kMaxIterations) {
+            throw std::runtime_error("iterationCount > kMaxIterations");
+        }
+        iterationCount++;
+    }
+    return vecX;
+}
+
+std::vector<double> SolveLinearEquation_Guided(const Matrix& matrixA,
+                                              const std::vector<double>& vecB,
+                                              double epsilon, double tau,
+                                              int chunckSize) {
+    if (!matrixA.IsSquare() || vecB.size() != matrixA.GetRows()) {
+        throw std::invalid_argument("!matrix.IsSquare() || rightPart.size() != matrix.GetRows()");
+    }
+
+    const double kNormB = Norm2(vecB);
+    if (kNormB == 0) {
+        throw std::runtime_error("normB == 0");
+    }
+    const size_t kVecSize = vecB.size();
+    std::vector<double> vecAx(kVecSize, 0.0);
+    std::vector<double> vecX(kVecSize, 0.0);
+    std::vector<double> vecAxMinusB(kVecSize, 0.0);
+    const int kMaxIterations = 1000;
+    //const int chunckSize = 16;
+    int iterationCount = 0;
+
+    while (true) {
+
+#pragma omp parallel for schedule(guided, chunckSize)
+        for (size_t i = 0; i < matrixA.GetRows(); i++) {
+            vecAx[i] = 0;
+            for (size_t j = 0; j < matrixA.GetCols(); j++) {
+                vecAx[i] += matrixA.At(i, j) * vecX.at(j);
+            }
+        }
+
+        //Ax - b
+        double sum = 0.0;
+
+#pragma omp parallel for reduction(+:sum) schedule(guided, chunckSize)
+        for (size_t i = 0; i < vecAx.size(); i++) {
+            vecAxMinusB[i] = vecAx[i] - vecB[i];
+            sum += vecAxMinusB[i] * vecAxMinusB[i];
+        }
+
+        if (sqrt(sum) / kNormB < epsilon) {
+            break;
+        }
+
+#pragma omp parallel for schedule(guided, chunckSize)
+        for (size_t i = 0; i < vecX.size(); i++) {
+            vecX[i] = vecX[i] - tau * vecAxMinusB[i];
+        }
+
+        if (iterationCount > kMaxIterations) {
+            throw std::runtime_error("iterationCount > kMaxIterations");
+        }
+        iterationCount++;
+    }
+    return vecX;
+}
+
+template <typename T>
+std::string ToRow(const std::vector<T>& vector) {
+    std::string row;
+    for (int i = 0; i < vector.size() - 1; i++) {
+        row += std::to_string(vector[i]) + ";";
+    }
+    row += std::to_string(vector[vector.size() - 1]);
+
+    return row;
 }
 
 int main(int argc, char** argv) {
@@ -472,16 +645,34 @@ int main(int argc, char** argv) {
         //PrintResult(std::cout, "ParallelB", duration, omp_get_max_threads(), result, 1.0);
     #endif
 
-        std::cout << numThread << "," << durations.at(0) << "," << durations.at(1) << std::endl;
+        std::cout << numThread << ";" << durations.at(0) << ";" << durations.at(1) << std::endl;
     }
 #endif
 
-#if 0
-    omp_set_num_threads(8);
-    timer.Reset();
-    result = SolveLinearEquation_Schedule(matrixA, vecB, epsilon, tau);
-    duration = timer.GetDurationSec();
-    PrintResult(std::cout, "Parallel_Schedule", duration, omp_get_max_threads(), result, 1.0);
+#if 1
+    omp_set_num_threads(12);
+    const std::vector<int> chunkSizes = { 4, 16, 32, 64, 128, 256, 512, 1024 };
+    std::vector<double> durations;
+    for (int chunckSize : chunkSizes) {
+        durations.clear();
+        timer.Reset();
+        SolveLinearEquation_Static(matrixA, vecB, epsilon, tau, chunckSize);
+        durations.push_back(timer.GetDurationSec());
+
+        timer.Reset();
+        SolveLinearEquation_Dynamic(matrixA, vecB, epsilon, tau, chunckSize);
+        durations.push_back(timer.GetDurationSec());
+
+        timer.Reset();
+        SolveLinearEquation_Guided(matrixA, vecB, epsilon, tau, chunckSize);
+        durations.push_back(timer.GetDurationSec());
+
+        std::cout << chunckSize << ";" << ToRow(durations) << std::endl;
+
+    }
+
+
+    //PrintResult(std::cout, "Parallel_Schedule", duration, omp_get_max_threads(), result, 1.0);
 #endif
 
 }
