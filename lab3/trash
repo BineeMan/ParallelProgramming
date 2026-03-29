@@ -1,0 +1,9 @@
+    std::vector<MPI_Datatype> datatypes(gridSize.x(), MPI_DATATYPE_NULL);
+    std::vector<int>rdispls(gridSize.x(), 0);
+    for (int j = 0; j < gridSize.x(); j++) {
+        MPI_Datatype col_type;
+        MPI_Type_vector(rowsCount_B, 1, colsCount_B, MPI_DOUBLE, &col_type);
+        MPI_Type_create_resized(col_type, 0, sizeof(double), &col_type);
+        MPI_Type_commit(&col_type);
+        datatypes[j] = col_type;
+    }

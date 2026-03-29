@@ -28,41 +28,60 @@ private:
 
 struct Point {
 private:
-    int coords[2] = {0, 0};
+    int coords[2] = { 0, 0 };
 
 public:
-    int i() {
+    int i() const {
         return coords[0];
     }
 
-    int j() {
+    int j() const {
         return coords[1];
     }
 
-    int x() {
+    int x() const {
+        return coords[1];
+    }
+
+    int y() const {
         return coords[0];
-    }
-
-    int y() {
-        return coords[1];
     }
 
     int* Raw() {
         return coords;
     }
 
-    std::string ToString() const {
-        return "(" + std::to_string(coords[0]) + ", " + std::to_string(coords[1]) + ")";
+    std::string ToStringIJ() const {
+        return "(" + std::to_string(i()) + ", " + std::to_string(j()) + ")";
+    }
+
+    std::string ToStringXY() const {
+        return "(" + std::to_string(x()) + ", " + std::to_string(y()) + ")";
     }
 };
 
 class Matrix {
 private:
     std::vector<double> Data;
+
     size_t Rows{ 0 };
+
     size_t Cols{ 0 };
 
+    bool IsRowMajor = true;
+
+private:
+    size_t GetIndexOf(size_t i, size_t j) const {
+        if (IsRowMajor) {
+            return i * Cols + j;
+        }
+        return j * Cols + i;
+    }
 public:
+    enum class EMatrixType {
+        ROW_MAJOR,
+        COL_MAJOR
+    };
     Matrix() = default;
 
     Matrix(const Matrix& other) = default;
@@ -80,6 +99,13 @@ public:
     Matrix(size_t rows, size_t cols) {
         Rows = rows;
         Cols = cols;
+        Data.resize(rows * cols, 0.0f);
+    }
+
+    Matrix(size_t rows, size_t cols, bool isRowMajor) {
+        Rows = rows;
+        Cols = cols;
+        IsRowMajor = isRowMajor;
         Data.resize(rows * cols, 0.0f);
     }
 
@@ -117,14 +143,14 @@ public:
         if (i >= Rows || j >= Cols) {
             throw std::out_of_range("Matrix indices out of range");
         }
-        return Data[i * Cols + j];
+        return Data[GetIndexOf(i, j)];
     }
 
     const double& At(size_t i, size_t j) const {
         if (i >= Rows || j >= Cols) {
             throw std::out_of_range("Matrix indices out of range");
         }
-        return Data[i * Cols + j];
+        return Data[GetIndexOf(i, j)];
     }
 
     void Print() const {
@@ -175,6 +201,7 @@ public:
 
         out.close();
     }
+
 };
 
 struct Distribution {
@@ -189,6 +216,13 @@ struct Distribution {
         return Offsets.at(rank);
     }
 
+    void PrintSize() const {
+        for (auto v: Sizes) {
+            std::cout << v << " ";
+        }
+        std::cout << std::endl;
+    }
+
     Distribution() = default;
 
     Distribution(int size, int splitSize) {
@@ -200,16 +234,18 @@ struct Distribution {
     }
 
     void Calculate(int size, int splitSize) {
-        Sizes.resize(size);
-        Offsets.resize(size);
+        Sizes.resize(splitSize);
+        Offsets.resize(splitSize);
 
         const int base = size / splitSize;
         const int remainder = size % splitSize;
 
         int offset{ 0 };
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < splitSize; i++) {
+            //std::cout << i << std::endl;
             int n = base + (i < remainder ? 1 : 0);
             Sizes[i] = n;
+            //std::cout << n << ", " << Sizes.at(i) << std::endl;
             Offsets[i] = offset;
             offset += n;
         }
@@ -250,7 +286,7 @@ struct Distribution {
     }
 };
 
-template <typename T>
+template<typename T>
 void PrintVector(const std::vector<T>& vector) {
     for (int i = 0; i < vector.size() - 1; i++) {
         std::cout << vector[i] << " ";
@@ -268,7 +304,8 @@ std::string CheckAnswer(const Matrix& matrix, size_t expectedValue, size_t expec
     for (int i = 0; i < matrix.GetRowsCount(); i++) {
         for (int j = 0; j < matrix.GetColsCount(); j++) {
             if (matrix.At(i, j) != expectedValue) {
-                return "Value does not match, excpected " + std::to_string(expectedValue) + ", got " + std::to_string(matrix.At(i, j));
+                return "Value does not match, excpected " + std::to_string(expectedValue) + ", got " + std::to_string(
+                           matrix.At(i, j));
             }
         }
     }
@@ -313,21 +350,29 @@ Matrix Multiply(const Matrix& A, const Matrix& B, int rank, int size) {
 
     int periods[2] = { 0, 0 };
     MPI_Comm cart_comm;
-    MPI_Cart_create(MPI_COMM_WORLD, 2, gridSize.Raw(), periods, 0, &cart_comm);
+    MPI_Cart_create(MPI_COMM_WORLD,
+                    2,
+                    gridSize.Raw(),
+                    periods,
+                    0,
+                    &cart_comm);
 
     Point rankCoordinate;
     MPI_Cart_coords(cart_comm, rank, 2, rankCoordinate.Raw());
 
-    // Matrix A
     Distribution distribution_A;
     if (rank == 0) {
-        distribution_A.Calculate(A.GetColsCount(), A.GetRowsCount(), gridSize.x());
-        std::cout << gridSize.ToString() << std::endl;
+        distribution_A.Calculate(
+            A.GetColsCount(),
+            A.GetRowsCount(),
+            gridSize.y());
     }
     distribution_A.Bcast(0, MPI_COMM_WORLD);
 
-    const int kRowsPerCurrentProcess = distribution_A.GetSizeAt(rankCoordinate.i()) / colsCount_A;
-    Matrix A_local(kRowsPerCurrentProcess, colsCount_A, 0);
+    const int kRowsPerCurrentProcess =
+            distribution_A.GetSizeAt(rankCoordinate.i()) / colsCount_A;
+
+    Matrix A_local(kRowsPerCurrentProcess, colsCount_A, 0.0f);
 
     const int col0_color = rankCoordinate.j() == 0 ? 0 : MPI_UNDEFINED;
     MPI_Comm col0_comm;
@@ -342,12 +387,13 @@ Matrix Multiply(const Matrix& A, const Matrix& B, int rank, int size) {
         int col0_rank;
         MPI_Comm_rank(col0_comm, &col0_rank);
         MPI_Scatterv(A.Raw(),
-            distribution_A.Sizes.data(),
-            distribution_A.Offsets.data(),
-            MPI_DOUBLE,
-            A_local.Raw(),
-            distribution_A.GetSizeAt(col0_rank),
-            MPI_DOUBLE, 0, col0_comm);
+                     distribution_A.Sizes.data(),
+                     distribution_A.Offsets.data(),
+                     MPI_DOUBLE,
+                     A_local.Raw(),
+                     distribution_A.GetSizeAt(col0_rank),
+                     MPI_DOUBLE, 0, col0_comm);
+        //A_local.PrintToFile("out/" + rankCoordinate.ToStringIJ() + ".txt");
     }
 
     MPI_Comm rowComm;
@@ -355,47 +401,56 @@ Matrix Multiply(const Matrix& A, const Matrix& B, int rank, int size) {
 
     MPI_Bcast(A_local.Raw(), A_local.GetDataSize(), MPI_DOUBLE, 0, rowComm);
 
-     Distribution distributionB;
-     if (rank == 0) {
-         distributionB.Calculate(colsCount_B, gridSize.y());
-     }
+    // Matrix B
+    MPI_Datatype col_block_send;
+    MPI_Type_vector(rowsCount_B, 1, colsCount_B, MPI_DOUBLE, &col_block_send);
+    MPI_Type_commit(&col_block_send);
 
-    // const int kColsPerCurrentProcess =
-    //     colsCount_B / gridSize.y() + (rankCoordinate.j() < colsCount_B % gridSize.y() ? 1 : 0);
+    MPI_Datatype col_block_send_resized;
+    MPI_Type_create_resized(col_block_send, 0, sizeof(double), &col_block_send_resized);
+    MPI_Type_commit(&col_block_send_resized);
 
-    MPI_Datatype col_block;
-    MPI_Type_vector(rowsCount_B,
-        distributionB.GetSizeAt(rankCoordinate.j()),
-        colsCount_B,
-        MPI_DOUBLE,
-        &col_block);
-    MPI_Type_commit(&col_block);
-
-    MPI_Datatype col_block_resized;
-    MPI_Type_create_resized(col_block,
-        0,
-        distributionB.GetSizeAt(rankCoordinate.j()) * sizeof(double),
-        &col_block_resized);
-    MPI_Type_commit(&col_block_resized);
-
-    int row0_color = rankCoordinate.j() == 0 ? 0 : MPI_UNDEFINED;
+    const int row0_color = rankCoordinate.i() == 0 ? 0 : MPI_UNDEFINED;
     MPI_Comm row0_comm;
     MPI_Comm_split(cart_comm, row0_color, rankCoordinate.j(), &row0_comm);
 
-    Matrix B_local(rowsCount_B, distributionB.GetSizeAt(rankCoordinate.j()), -1.0);
-    if (row0_color != MPI_UNDEFINED) {
-        int row0_rank;
-        MPI_Comm_rank(row0_comm, &row0_rank);
-        MPI_Scatterv(B_local.Raw(),
-            distributionB.Sizes.data(),
-            distributionB.Offsets.data(),
-            col_block_resized,
-            B_local.Raw(),
-            B_local.GetDataSize(),
-            MPI_DOUBLE,
-            0,
-            row0_comm);
+    Distribution distribution_B;
+    if (rank == 0) {
+        distribution_B.Calculate(colsCount_B, gridSize.x());
+        //std::cout << "x = " << gridSize.x() << std::endl;
     }
+    distribution_B.Bcast(0, MPI_COMM_WORLD);
+
+    Matrix B_local(rowsCount_B,
+        distribution_B.GetSizeAt(rankCoordinate.j()),
+        true);
+    //Matrix B_local(rowsCount_B, 10, -1);
+    //B_local.PrintToFile("out/" + rankCoordinate.ToString() + ".txt");
+
+    if (row0_color != MPI_UNDEFINED) {
+        //std::cout << rankCoordinate.j() << " = " << distribution_B.GetSizeAt(rankCoordinate.j()) << std::endl;
+        MPI_Scatterv(B.Raw(),
+                     distribution_B.Sizes.data(),
+                     distribution_B.Offsets.data(),
+                     col_block_send_resized,
+                     B_local.Raw(),
+                     B_local.GetDataSize(),
+                     MPI_DOUBLE,
+                     0,
+                     row0_comm);
+
+        B_local.PrintToFile("out/" + rankCoordinate.ToStringIJ() + ".txt");
+    }
+
+    MPI_Comm col_comm;
+    MPI_Comm_split(cart_comm, rankCoordinate.j(), rankCoordinate.i(), &col_comm);
+
+    // MPI_Bcast(B_local.Raw(),
+    //           B_local.GetDataSize(),
+    //           MPI_DOUBLE,
+    //           0,
+    //           col_comm);
+    //B_local.PrintToFile("out/" + rankCoordinate.ToString() + ".txt");
 
     return Matrix(0, 0);
 }
@@ -412,14 +467,24 @@ int main(int argc, char** argv) {
         const int kMatrixSize = 10;
         A.Resize(kMatrixSize, kMatrixSize, 1);
         B.Resize(kMatrixSize, kMatrixSize, 1);
-        int acc = 0;
+
+        int acc;
+        acc = 0;
         for (int i = 0; i < A.GetRowsCount(); i++) {
             for (int j = 0; j < A.GetColsCount(); j++) {
                 A.At(i, j) = acc;
                 acc++;
             }
         }
-        //A.Print();
+
+        acc = 0;
+        for (int i = 0; i < B.GetRowsCount(); i++) {
+            for (int j = 0; j < B.GetColsCount(); j++) {
+                B.At(j, i) = acc;
+                acc++;
+            }
+        }
+        B.Print();
         //std::cout << A.GetRowsCount() << std::endl;
     }
     MPI_Barrier(MPI_COMM_WORLD);
