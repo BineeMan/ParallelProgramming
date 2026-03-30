@@ -346,6 +346,17 @@ std::string GetCurrentDateTime() {
     return std::ctime(&now_time);
 }
 
+MPI_Datatype CreateColumnBlockDatatype(int rowsCount, int colsCount, int blockLength) {
+    MPI_Datatype dataType;
+    MPI_Type_vector(rowsCount, blockLength, colsCount, MPI_DOUBLE, &dataType);
+    //MPI_Type_commit(&datatype);
+
+    MPI_Datatype dataTypeResized;
+    MPI_Type_create_resized(dataType, 0, sizeof(double) * blockLength, &dataTypeResized);
+    MPI_Type_commit(&dataTypeResized);
+    return dataTypeResized;
+}
+
 Matrix Multiply(const Matrix& A, const Matrix& B, int rank, int size) {
     if (rank < 0 || size < 0) {
         throw std::invalid_argument("rank must be non-negative");
@@ -436,13 +447,8 @@ Matrix Multiply(const Matrix& A, const Matrix& B, int rank, int size) {
     }
     distribution_B.Bcast(0, MPI_COMM_WORLD);
 
-    MPI_Datatype col_block_send;
-    MPI_Type_vector(rowsCount_B, distribution_B.GetSizeAt(rankCoordinate.j()), colsCount_B, MPI_DOUBLE, &col_block_send);
-    MPI_Type_commit(&col_block_send);
-
-    MPI_Datatype col_block_send_resized;
-    MPI_Type_create_resized(col_block_send, 0, sizeof(double) * distribution_B.GetSizeAt(rankCoordinate.j()), &col_block_send_resized);
-    MPI_Type_commit(&col_block_send_resized);
+    MPI_Datatype columnBlockB =
+        CreateColumnBlockDatatype(rowsCount_B, colsCount_B, distribution_B.GetSizeAt(rankCoordinate.j()));
 
     const int row0_color = rankCoordinate.i() == 0 ? 0 : MPI_UNDEFINED;
     MPI_Comm row0_comm;
@@ -451,6 +457,7 @@ Matrix Multiply(const Matrix& A, const Matrix& B, int rank, int size) {
     Matrix B_local(rowsCount_B,
         distribution_B.GetSizeAt(rankCoordinate.j()),
         true);
+
     //Matrix B_local(rowsCount_B, 10, -1);
     //B_local.PrintToFile("out/" + rankCoordinate.ToString() + ".txt");
 
@@ -461,7 +468,7 @@ Matrix Multiply(const Matrix& A, const Matrix& B, int rank, int size) {
         MPI_Scatterv(B.Raw(),
                      distribution_Col.Sizes.data(),
                      distribution_Col.Offsets.data(),
-                     col_block_send_resized,
+                     columnBlockB,
                      B_local.Raw(),
                      B_local.GetDataSize(),
                      MPI_DOUBLE,
@@ -478,12 +485,60 @@ Matrix Multiply(const Matrix& A, const Matrix& B, int rank, int size) {
     // Multiplication
     Matrix C_local = A_local * B_local;
 
+
+    C_local.PrintToFile("out/" + rankCoordinate.ToStringIJ() + ".txt");
+
+    if (rank == 0) {
+        auto t = A * B;
+        t.PrintToFile("out/res.txt");
+    }
+
     Matrix C;
     if (rank == 0) {
         C.Resize(rowsCount_A, colsCount_B, 0);
     }
 
-    return Matrix(0, 0);
+    // MPI_Datatype columnBlockC =
+    //     CreateColumnBlockDatatype(C_local.GetRowsCount(), C_local.GetColsCount(), 1);
+
+    std::vector<int> recvCounts(size, C_local.GetColsCount());
+    std::vector<int> offsets(size, 0);
+    if (rank == 0) {
+        int k = 0;
+        std::cout << "Rank 1D = " << rank << ", Rank 2D = " << rankCoordinate.ToStringIJ() << std::endl;
+        for (int i = 0; i < gridSize.y(); i++) {
+            for (int j = 0; j < gridSize.x(); j++) {
+                offsets.at(k) = i * (C.GetColsCount() * C_local.GetRowsCount()) + j * C_local.GetColsCount();
+                k++;
+            }
+        }
+        if (rank == 0) {
+            PrintVector(offsets);
+        }
+    }
+
+    MPI_Datatype dataType;
+    MPI_Type_vector(C_local.GetRowsCount(), C_local.GetColsCount(), colsCount_A, MPI_DOUBLE, &dataType);
+
+    MPI_Datatype columnBlockC;
+    MPI_Type_create_resized(dataType, 0, sizeof(double), &columnBlockC);
+    MPI_Type_commit(&columnBlockC);
+
+    MPI_Gatherv(C_local.Raw(),
+        C_local.GetDataSize(),
+        MPI_DOUBLE,
+        C.Raw(),
+        recvCounts.data(),
+        offsets.data(),
+        columnBlockC,
+        0,
+        MPI_COMM_WORLD);
+
+    if (rank == 0) {
+        C.PrintToFile("out/res_par.txt");
+    }
+
+    return rank == 0 ? C : Matrix(0, 0);
 }
 
 int main(int argc, char** argv) {
@@ -515,7 +570,7 @@ int main(int argc, char** argv) {
                 acc++;
             }
         }
-        //B.Print();
+        B.Print();
         //std::cout << A.GetRowsCount() << std::endl;
     }
     MPI_Barrier(MPI_COMM_WORLD);
