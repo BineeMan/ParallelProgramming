@@ -1,5 +1,4 @@
 #include <chrono>
-//#include <format>
 #include <iostream>
 #include <cmath>
 #include <fstream>
@@ -31,6 +30,13 @@ private:
     int coords[2] = { 0, 0 };
 
 public:
+    Point(int x, int y) {
+        coords[1] = x;
+        coords[0] = y;
+    }
+
+    Point() = default;
+
     int i() const {
         return coords[0];
     }
@@ -51,12 +57,21 @@ public:
         return coords;
     }
 
+    void setX(int x) {
+        coords[1] = x;
+    }
+
+    void setY(int y) {
+        coords[0] = y;
+    }
+
     std::string ToStringIJ() const {
-        return "(" + std::to_string(i()) + ", " + std::to_string(j()) + ")";
+        return "(" + std::to_string(i()) + "x" + std::to_string(j()) + ")";
     }
 
     std::string ToStringXY() const {
-        return "(" + std::to_string(x()) + ", " + std::to_string(y()) + ")";
+        //return "(" + std::to_string(x()) + ", " + std::to_string(y()) + ")";
+        return std::to_string(x()) + "x" + std::to_string(y());
     }
 };
 
@@ -75,13 +90,10 @@ private:
         }
         return j * Cols + i;
     }
+
 public:
     bool IsRowMajor = true;
 
-    enum class EMatrixType {
-        ROW_MAJOR,
-        COL_MAJOR
-    };
     Matrix() = default;
 
     Matrix(const Matrix& other) = default;
@@ -169,6 +181,10 @@ public:
         }
     }
 
+    std::string SizeToString() const {
+        return std::to_string(GetColsCount()) + "x" + std::to_string(GetRowsCount());
+    }
+
     size_t GetRowsCount() const {
         return Rows;
     }
@@ -241,7 +257,6 @@ public:
 
         out.close();
     }
-
 };
 
 struct Distribution {
@@ -345,7 +360,6 @@ std::string GetCurrentDateTime() {
 MPI_Datatype CreateColumnBlockDatatype(int rowsCount, int colsCount, int blockLength) {
     MPI_Datatype dataType;
     MPI_Type_vector(rowsCount, blockLength, colsCount, MPI_DOUBLE, &dataType);
-    //MPI_Type_commit(&datatype);
 
     MPI_Datatype dataTypeResized;
     MPI_Type_create_resized(dataType, 0, sizeof(double) * blockLength, &dataTypeResized);
@@ -353,7 +367,7 @@ MPI_Datatype CreateColumnBlockDatatype(int rowsCount, int colsCount, int blockLe
     return dataTypeResized;
 }
 
-Matrix Multiply(const Matrix& A, const Matrix& B, int rank, int size) {
+Matrix Multiply(const Matrix& A, const Matrix& B, int rank, int size, Point& gridSize) {
     if (rank < 0 || size < 0) {
         throw std::invalid_argument("rank must be non-negative");
     }
@@ -376,9 +390,7 @@ Matrix Multiply(const Matrix& A, const Matrix& B, int rank, int size) {
     int colsCount_B = rank == 0 ? B.GetColsCount() : 0;
     MPI_Bcast(&colsCount_B, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
-    Point gridSize;
-    MPI_Dims_create(size, 2, gridSize.Raw());
-    if (rowsCount_A % gridSize.x()  != 0 || colsCount_B % gridSize.y() != 0) {
+    if (rowsCount_A % gridSize.y() != 0 || colsCount_B % gridSize.x() != 0) {
         throw std::invalid_argument("gridSize.x() % colsCount_A != 0 || gridSize.y() % rowsCount_B != 0");
     }
 
@@ -430,57 +442,48 @@ Matrix Multiply(const Matrix& A, const Matrix& B, int rank, int size) {
     MPI_Bcast(A_local.Raw(), A_local.GetDataSize(), MPI_DOUBLE, 0, rowComm);
 
     // Matrix B
-    Distribution distribution_B;
-    if (rank == 0) {
-        distribution_B.Calculate(colsCount_B, gridSize.x());
-    }
-    distribution_B.Bcast(0, MPI_COMM_WORLD);
+    const int colsCount_localB = colsCount_B / gridSize.x();
 
-    MPI_Datatype columnBlockB =
-        CreateColumnBlockDatatype(rowsCount_B, colsCount_B, distribution_B.GetSizeAt(rankCoordinate.j()));
+    MPI_Datatype colDataType;
+    MPI_Type_vector(rowsCount_B, colsCount_localB,
+                    colsCount_B, MPI_DOUBLE, &colDataType);
+
+    MPI_Datatype columnBlockB;
+    MPI_Type_create_resized(colDataType, 0, colsCount_localB * sizeof(double), &columnBlockB);
+    MPI_Type_commit(&columnBlockB);
 
     const int row0_color = rankCoordinate.i() == 0 ? 0 : MPI_UNDEFINED;
     MPI_Comm row0_comm;
     MPI_Comm_split(cart_comm, row0_color, rankCoordinate.j(), &row0_comm);
 
     Matrix B_local(rowsCount_B,
-        distribution_B.GetSizeAt(rankCoordinate.j()),
-        true);
-
-    Distribution distribution_Col(gridSize.x(), gridSize.x());
+                   colsCount_localB);
 
     if (row0_color != MPI_UNDEFINED) {
-        MPI_Scatterv(B.Raw(),
-                     distribution_Col.Sizes.data(),
-                     distribution_Col.Offsets.data(),
-                     columnBlockB,
-                     B_local.Raw(),
-                     B_local.GetDataSize(),
-                     MPI_DOUBLE,
-                     0,
-                     row0_comm);
+        MPI_Scatter(B.Raw(),
+                    1,
+                    columnBlockB,
+                    B_local.Raw(),
+                    B_local.GetDataSize(),
+                    MPI_DOUBLE,
+                    0,
+                    row0_comm);
     }
+    MPI_Type_free(&columnBlockB);
 
-    MPI_Comm col_comm;
-    MPI_Comm_split(cart_comm, rankCoordinate.j(), rankCoordinate.i(), &col_comm);
-    MPI_Bcast(B_local.Raw(), B_local.GetDataSize(), MPI_DOUBLE, 0, col_comm);
+    MPI_Comm colComm;
+    MPI_Comm_split(cart_comm, rankCoordinate.j(), rankCoordinate.i(), &colComm);
+    MPI_Bcast(B_local.Raw(), B_local.GetDataSize(), MPI_DOUBLE, 0, colComm);
 
     // Multiplication
     Matrix C_local = A_local * B_local;
-
-    //C_local.PrintToFile("out/" + rankCoordinate.ToStringIJ() + ".txt");
-
-    if (rank == 0) {
-        auto t = A * B;
-        t.PrintToFile("out/res.txt");
-    }
-
+    
     Matrix C;
     if (rank == 0) {
         C.Resize(rowsCount_A, colsCount_B, 0);
     }
 
-    std::vector<int> recvCounts(size, C_local.GetColsCount());
+    std::vector<int> recvCounts(size, 1);
     std::vector<int> offsets(size, 0);
     if (rank == 0) {
         int k = 0;
@@ -493,75 +496,104 @@ Matrix Multiply(const Matrix& A, const Matrix& B, int rank, int size) {
     }
 
     MPI_Datatype dataType;
-    MPI_Type_vector(C_local.GetRowsCount(), C_local.GetColsCount(), colsCount_B, MPI_DOUBLE, &dataType);
+    MPI_Type_vector(C_local.GetRowsCount(),
+                    C_local.GetColsCount(), colsCount_B, MPI_DOUBLE, &dataType);
 
     MPI_Datatype columnBlockC;
     MPI_Type_create_resized(dataType, 0, sizeof(double), &columnBlockC);
     MPI_Type_commit(&columnBlockC);
 
     MPI_Gatherv(C_local.Raw(),
-        C_local.GetDataSize(),
-        MPI_DOUBLE,
-        C.Raw(),
-        recvCounts.data(),
-        offsets.data(),
-        columnBlockC,
-        0,
-        MPI_COMM_WORLD);
+                C_local.GetDataSize(),
+                MPI_DOUBLE,
+                C.Raw(),
+                recvCounts.data(),
+                offsets.data(),
+                columnBlockC,
+                0,
+                MPI_COMM_WORLD);
+
+    MPI_Type_free(&columnBlockC);
 
     return rank == 0 ? C : Matrix(0, 0);
 }
-std::string delim = " ";
 
-struct Size {
-    int matrixSize;
-    int rowsA;
-    int colsB;
-    std::string ToString() const {
-        return std::to_string(matrixSize) + delim +  std::to_string(rowsA) + delim +  std::to_string(colsB);
-    }
-};
+std::string delim = ";";
 
 int main(int argc, char** argv) {
     MPI_Init(&argc, &argv);
     int size, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    int rowsCount_A = 0, colsCount_A = 0;
+    int rowsCount_B = 0, colsCount_B = 0;
+    int isAutoSize = 0, x = 0, y = 0;
+    int isSuccess = 1;
 
-    std::vector<Size> matrixSizes = {
-        { 12, 12, 12 },
-        { 12, 12, 24 },
-        { 12, 12, 48 },
-        { 12, 12, 48 },
-        { 12, 12, 100 },
-    };
-
-    for (Size matrixSize : matrixSizes) {
-        Matrix A, B;
-        if (rank == 0) {
-            A.Resize(matrixSize.rowsA, matrixSize.matrixSize, 1);
-            B.Resize(matrixSize.matrixSize, matrixSize.colsB, 1);
+    if (rank == 0) {
+        if (argc < 8) {
+            std::cout << "Not enough args" << std::endl;
+            isSuccess = 0;
         }
-        MPI_Barrier(MPI_COMM_WORLD);
-        Timer timer;
-        double duration = 0;
-        timer.Reset();
-        Matrix result = Multiply(A, B, rank, size);
-        duration = timer.GetDurationSec();
-
-        if (rank == 0) {
-            Matrix testResult = A * B;
-            bool isPassed = result == testResult;
-            std::cout << size << delim << matrixSize.ToString() << delim << duration << delim << (isPassed ? "OK" : "Wrong answer") << std::endl;
-            if (!isPassed) {
-                testResult.PrintToFile("out/expected.txt");
-                result.PrintToFile("out/got.txt");
+        else {
+            rowsCount_A = std::stoi(argv[1]);
+            colsCount_A = std::stoi(argv[2]);
+            rowsCount_B = std::stoi(argv[3]);
+            colsCount_B = std::stoi(argv[4]);
+            isAutoSize = std::stoi(argv[5]);
+            x = std::stoi(argv[6]);
+            y = std::stoi(argv[7]);
+            if (colsCount_A != rowsCount_B) {
+                std::cout << "Bad matrix size" << std::endl;
+                isSuccess = 0;
             }
         }
-
+    }
+    MPI_Bcast(&isSuccess, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    if (isSuccess != 1) {
+        MPI_Finalize();
+        return 0;
     }
 
+    MPI_Bcast(&rowsCount_A, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&colsCount_A, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&rowsCount_B, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&colsCount_B, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&isAutoSize, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&x, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&y, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
+    // Grid size
+    Point gridSize(x, y);
+    if (isAutoSize) {
+        MPI_Dims_create(size, 2, gridSize.Raw());
+    }
+
+    Matrix A, B;
+    if (rank == 0) {
+        A.Resize(rowsCount_A, colsCount_A, 1);
+        B.Resize(rowsCount_B, colsCount_B, 1);
+    }
+
+    MPI_Barrier(MPI_COMM_WORLD);
+    Timer timer;
+    double duration = 0;
+    try {
+        timer.Reset();
+        Matrix result = Multiply(A, B, rank, size, gridSize);
+        duration = timer.GetDurationSec();
+    }
+    catch (const std::exception& e) {
+        std::cerr << "std::exception: " << e.what() << std::endl;
+    }
+    catch (...) {
+        std::cerr << "Unknown exception (non-standard)" << std::endl;
+    }
+
+    if (rank == 0) {
+        std::cout << A.SizeToString() << delim << B.SizeToString() << delim << gridSize.ToStringXY() << delim << duration << std::endl;
+    }
 
     MPI_Finalize();
+    return 0;
 }

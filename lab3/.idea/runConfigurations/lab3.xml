@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="lab3" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-n 12 --oversubscribe ./cmake-build-debug/lab3" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" PROJECT_NAME="lab1" TARGET_NAME="lab3" CONFIG_NAME="Debug" RUN_PATH="/usr/lib64/openmpi/bin/mpirun">
+  <configuration default="false" name="lab3" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-n 12 --oversubscribe ./cmake-build-debug/lab3 12 12 12 12 1 0 0" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" PROJECT_NAME="lab1" TARGET_NAME="lab3" CONFIG_NAME="Debug" RUN_PATH="/usr/lib64/openmpi/bin/mpirun">
     <envs>
       <env name="PATH" value="/usr/lib64/openmpi/bin:$PATH" />
       <env name="LD_LIBRARY_PATH" value="/usr/lib64/openmpi/lib:$LD_LIBRARY_PATH" />
