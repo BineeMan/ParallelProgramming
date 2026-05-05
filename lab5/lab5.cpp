@@ -1,228 +1,186 @@
 #include <mpi.h>
 
-#include <atomic>
-#include <condition_variable>
+#include <algorithm>
 #include <cmath>
-#include <deque>
-#include <iostream>
+#include <cstdio>
+#include <cstdlib>
 #include <mutex>
-#include <random>
 #include <thread>
 #include <vector>
 
-struct Task {
-    int repeatNum = 0;
-};
+constexpr int L = 2048;
+constexpr int NUM_OF_TASKS = 2048;
+constexpr int NUM_OF_ITERATIONS = 16;
 
-static constexpr int TAG_REQUEST = 1;
-static constexpr int TAG_TASKS   = 2;
-static constexpr int TAG_DONE    = 3;
-static constexpr int TAG_STOP    = 4;
+constexpr int ASK_FOR_TASKS_TAG = 128;
+constexpr int SEND_NUM_OF_TASKS_TAG = 256;
+constexpr int SEND_TASKS_TAG = 512;
+constexpr int IS_DONE = 8;
 
-struct SharedState {
-    std::mutex mtx;
-    std::condition_variable cv;
+int size = 0;
+int rank = 0;
 
-    std::deque<Task> localTasks;
+double global_result = 0.0;
+int completed_tasks = 0;
 
-    bool shutdown = false;
-    bool iterationDone = false;
-    bool localNeedWork = false;
+std::vector<int> task_list(NUM_OF_TASKS);
 
-    int iter = 0;
-    long long localDoneCount = 0;
-};
+std::mutex task_mutex;
+std::size_t next_local_task = 0; // следующий локальный таск на выполнение
+std::size_t donate_boundary = 0; // правая граница задач, которые ещё можно отдать
 
-static std::vector<Task> generateTasks(int rank, int size, int iter) {
-    std::mt19937 rng(1234567u + rank * 10007u + iter * 7919u);
-    std::uniform_int_distribution<int> noise(0, 3000);
-
-    // Волна нагрузки, зависящая от rank и iter.
-    int wave = std::abs(rank - (iter % size));
-    int taskCount = 12 + wave * 4; // чем ближе к пику волны, тем больше задач
-
-    std::vector<Task> tasks;
-    tasks.reserve(taskCount);
-    for (int i = 0; i < taskCount; ++i) {
-        Task t;
-        t.repeatNum = 15000 + wave * 12000 + noise(rng);
-        tasks.push_back(t);
-    }
-    return tasks;
-}
-
-static void runTask(const Task& t, double& globalRes) {
-    double local = 0.0;
-    for (int i = 0; i < t.repeatNum; ++i) {
-        local += std::sqrt(static_cast<double>(i));
-    }
-    globalRes += local;
-}
-
-static void sendTaskBatch(int dest, int iter, const std::vector<Task>& batch) {
-    int header[2] = {iter, static_cast<int>(batch.size())};
-    MPI_Send(header, 2, MPI_INT, dest, TAG_TASKS, MPI_COMM_WORLD);
-    if (!batch.empty()) {
-        std::vector<int> payload(batch.size());
-        for (size_t i = 0; i < batch.size(); ++i) payload[i] = batch[i].repeatNum;
-        MPI_Send(payload.data(), static_cast<int>(payload.size()), MPI_INT, dest, TAG_TASKS, MPI_COMM_WORLD);
+void InitializeTasks(std::vector<int>& tasks, int iteration) {
+    for (int i = 0; i < NUM_OF_TASKS; ++i) {
+        tasks[i] = std::abs(50 - i % 100) * std::abs(rank - (iteration % size)) * L;
     }
 }
 
-static std::vector<Task> recvTaskBatch(int src) {
-    int header[2] = {0, 0};
-    MPI_Recv(header, 2, MPI_INT, src, TAG_TASKS, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    int count = header[1];
-    std::vector<Task> batch;
-    batch.resize(count);
-    if (count > 0) {
-        std::vector<int> payload(count);
-        MPI_Recv(payload.data(), count, MPI_INT, src, TAG_TASKS, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        for (int i = 0; i < count; ++i) batch[i].repeatNum = payload[i];
+void DoTask(int weight) {
+    for (int j = 0; j < weight; ++j) {
+        global_result += std::sin(static_cast<double>(j));
     }
-    return batch;
 }
 
-static void workerThreadFunc(SharedState* st, double* localRes) {
+void ProcessLocalTasks() {
     while (true) {
-        Task task;
-        {
-            std::unique_lock<std::mutex> lock(st->mtx);
-            st->cv.wait(lock, [&] {
-                return st->shutdown || !st->localTasks.empty();
-            });
-            if (st->shutdown) break;
-            task = st->localTasks.front();
-            st->localTasks.pop_front();
-        }
-
-        runTask(task, *localRes);
+        int idx = -1;
 
         {
-            std::lock_guard<std::mutex> lock(st->mtx);
-            ++st->localDoneCount;
-            if (st->localTasks.empty()) {
-                st->localNeedWork = true;
+            std::lock_guard<std::mutex> lock(task_mutex);
+            if (next_local_task < donate_boundary) {
+                idx = static_cast<int>(next_local_task++);
             }
         }
+
+        if (idx < 0) {
+            break;
+        }
+
+        DoTask(task_list[static_cast<std::size_t>(idx)]);
+        ++completed_tasks;
     }
 }
 
-static void commThreadFunc(SharedState* st, int rank, int size) {
-    std::vector<Task> pendingPool; // резерв задач, которые rank 0 может раздавать
-    pendingPool.reserve(1024);
+void RequestAndProcessRemoteTasks() {
+    bool received_any = false;
 
-    long long expectedDone = 0;
-    bool haveExpectedDone = false;
+    do {
+        received_any = false;
 
-    while (true) {
-        int flag = 0;
-        MPI_Status status{};
-        MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &flag, &status);
-
-        if (flag) {
-            if (status.MPI_TAG == TAG_REQUEST) {
-                int dummy = 0;
-                MPI_Recv(&dummy, 1, MPI_INT, status.MPI_SOURCE, TAG_REQUEST, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-
-                if (rank == 0) {
-                    std::vector<Task> batch;
-                    {
-                        std::lock_guard<std::mutex> lock(st->mtx);
-                        if (!pendingPool.empty()) {
-                            size_t give = std::max<size_t>(1, pendingPool.size() / 2);
-                            give = std::min(give, pendingPool.size());
-                            batch.insert(batch.end(), pendingPool.begin(), pendingPool.begin() + static_cast<long>(give));
-                            pendingPool.erase(pendingPool.begin(), pendingPool.begin() + static_cast<long>(give));
-                        }
-                    }
-                    sendTaskBatch(status.MPI_SOURCE, st->iter, batch);
-                } else {
-                    // Не-координатору проще не раздавать задачи; он только отвечает "нет".
-                    std::vector<Task> empty;
-                    sendTaskBatch(status.MPI_SOURCE, st->iter, empty);
-                }
-            } else if (status.MPI_TAG == TAG_TASKS) {
-                std::vector<Task> batch = recvTaskBatch(status.MPI_SOURCE);
-                {
-                    std::lock_guard<std::mutex> lock(st->mtx);
-                    for (auto& t : batch) st->localTasks.push_back(t);
-                    st->localNeedWork = false;
-                }
-                st->cv.notify_one();
-            } else if (status.MPI_TAG == TAG_DONE) {
-                long long one = 0;
-                MPI_Recv(&one, 1, MPI_LONG_LONG, status.MPI_SOURCE, TAG_DONE, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-                if (rank == 0) {
-                    expectedDone += one;
-                }
-            } else if (status.MPI_TAG == TAG_STOP) {
-                int dummy = 0;
-                MPI_Recv(&dummy, 1, MPI_INT, status.MPI_SOURCE, TAG_STOP, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-                std::lock_guard<std::mutex> lock(st->mtx);
-                st->shutdown = true;
-                st->cv.notify_all();
-                break;
-            }
-        } else {
-            bool needWork = false;
-            {
-                std::lock_guard<std::mutex> lock(st->mtx);
-                needWork = st->localNeedWork && !st->shutdown;
+        for (int peer = 0; peer < size; ++peer) {
+            if (peer == rank) {
+                continue;
             }
 
-            if (needWork) {
-                // Запросить работу у rank 0.
-                if (rank != 0) {
-                    int dummy = 0;
-                    MPI_Send(&dummy, 1, MPI_INT, 0, TAG_REQUEST, MPI_COMM_WORLD);
+            int request_rank = rank;
+            MPI_Send(&request_rank, 1, MPI_INT, peer, ASK_FOR_TASKS_TAG, MPI_COMM_WORLD);
 
-                    // Получить ответ.
-                    std::vector<Task> batch = recvTaskBatch(0);
-                    if (!batch.empty()) {
-                        {
-                            std::lock_guard<std::mutex> lock(st->mtx);
-                            for (auto& t : batch) st->localTasks.push_back(t);
-                            st->localNeedWork = false;
-                        }
-                        st->cv.notify_one();
-                    } else {
-                        // Пока работ нет, подождать немного и попробовать снова.
-                        std::this_thread::sleep_for(std::chrono::milliseconds(5));
-                    }
-                } else {
-                    // rank 0 сам может “подкармливать” свой worker из pendingPool.
-                    std::lock_guard<std::mutex> lock(st->mtx);
-                    if (!pendingPool.empty() && st->localTasks.empty()) {
-                        size_t give = std::max<size_t>(1, pendingPool.size() / 2);
-                        give = std::min(give, pendingPool.size());
-                        for (size_t i = 0; i < give; ++i) {
-                            st->localTasks.push_back(pendingPool[i]);
-                        }
-                        pendingPool.erase(pendingPool.begin(), pendingPool.begin() + static_cast<long>(give));
-                        st->localNeedWork = false;
-                        st->cv.notify_one();
-                    } else {
-                        std::this_thread::sleep_for(std::chrono::milliseconds(5));
-                    }
-                }
-            } else {
-                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            int count = 0;
+            MPI_Recv(&count, 1, MPI_INT, peer, SEND_NUM_OF_TASKS_TAG,
+                     MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+            if (count <= 0) {
+                continue;
+            }
+
+            std::vector<int> chunk(static_cast<std::size_t>(count));
+            MPI_Recv(chunk.data(), count, MPI_INT, peer, SEND_TASKS_TAG,
+                     MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+            received_any = true;
+
+            for (int weight: chunk) {
+                DoTask(weight);
+                ++completed_tasks;
             }
         }
+    } while (received_any);
+}
 
-        // Если rank 0, после накопления завершенных задач можно окончить итерацию.
+void Work() {
+    for (int iter = 0; iter < NUM_OF_ITERATIONS; ++iter) {
+        double start_iteration = MPI_Wtime();
+
+        {
+            std::lock_guard<std::mutex> lock(task_mutex);
+            InitializeTasks(task_list, iter);
+            completed_tasks = 0;
+            next_local_task = 0;
+            donate_boundary = task_list.size();
+        }
+
+        ProcessLocalTasks();
+        RequestAndProcessRemoteTasks();
+
+        double end_iteration = MPI_Wtime();
+        double iteration_time = end_iteration - start_iteration;
+
+        double max_iteration_time = 0.0;
+        double min_iteration_time = 0.0;
+
+        MPI_Allreduce(&iteration_time, &max_iteration_time, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+        MPI_Allreduce(&iteration_time, &min_iteration_time, 1, MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
+        MPI_Barrier(MPI_COMM_WORLD);
+
+        double disbalance = max_iteration_time - min_iteration_time;
+        double disbalance_percent = (max_iteration_time > 0.0)
+                                        ? (disbalance / max_iteration_time) * 100.0
+                                        : 0.0;
+
+        std::printf("\n");
+        std::printf("rank = %d\n", rank);
+        std::printf("iteration = %d\n", iter);
+        std::printf("time = %f\n", iteration_time);
+        std::printf("task_list = %d\n", completed_tasks);
+        std::printf("global_result = %.2f\n", global_result);
+
         if (rank == 0) {
-            std::lock_guard<std::mutex> lock(st->mtx);
-            if (!haveExpectedDone) {
-                // expectedDone заполняется сообщениями TAG_DONE; здесь просто ждём.
+            std::printf("iteration #%d\n", iter);
+            std::printf("disbalance = %.2f disbalance_percent = %.2f\n",
+                        disbalance, disbalance_percent);
+        }
+
+        std::printf("\n");
+    }
+
+    int done = IS_DONE;
+    MPI_Send(&done, 1, MPI_INT, rank, ASK_FOR_TASKS_TAG, MPI_COMM_WORLD);
+}
+
+void Receive() {
+    while (true) {
+        int requester = 0;
+        MPI_Recv(&requester, 1, MPI_INT, MPI_ANY_SOURCE, ASK_FOR_TASKS_TAG,
+                 MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+        if (requester == IS_DONE) {
+            break;
+        }
+
+        int tasks_to_send = 0;
+        std::size_t start_index = 0;
+
+        {
+            std::lock_guard<std::mutex> lock(task_mutex);
+
+            std::size_t available = 0;
+            if (donate_boundary > next_local_task) {
+                available = donate_boundary - next_local_task;
+            }
+
+            tasks_to_send = static_cast<int>(available / (size * 2));
+
+            if (tasks_to_send > 0) {
+                start_index = donate_boundary - static_cast<std::size_t>(tasks_to_send);
+                donate_boundary = start_index;
             }
         }
 
-        // Условие остановки для comm-thread выставляет main thread через shutdown.
-        {
-            std::lock_guard<std::mutex> lock(st->mtx);
-            if (st->shutdown) break;
+        MPI_Send(&tasks_to_send, 1, MPI_INT, requester, SEND_NUM_OF_TASKS_TAG, MPI_COMM_WORLD);
+
+        if (tasks_to_send > 0) {
+            MPI_Send(task_list.data() + start_index, tasks_to_send, MPI_INT,
+                     requester, SEND_TASKS_TAG, MPI_COMM_WORLD);
         }
     }
 }
@@ -230,113 +188,28 @@ static void commThreadFunc(SharedState* st, int rank, int size) {
 int main(int argc, char** argv) {
     int provided = 0;
     MPI_Init_thread(&argc, &argv, MPI_THREAD_MULTIPLE, &provided);
-    if (provided < MPI_THREAD_MULTIPLE) {
-        if (provided == MPI_THREAD_SINGLE) {
-            std::cerr << "MPI does not support MPI_THREAD_MULTIPLE on this system.\n";
-        } else {
-            std::cerr << "MPI thread support is too weak for this example.\n";
-        }
-        MPI_Abort(MPI_COMM_WORLD, 1);
+
+    if (provided != MPI_THREAD_MULTIPLE) {
+        std::printf("Can't set MPI_THREAD_MULTIPLE.\n");
+        MPI_Finalize();
+        return 1;
     }
 
-    int rank = 0, size = 0;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    const int iterations = 5;
+    double start_time = MPI_Wtime();
 
-    double globalRes = 0.0;
-    long long globalDone = 0;
+    std::thread receiver_thread(Receive);
+    std::thread worker_thread(Work);
 
-    for (int iter = 0; iter < iterations; ++iter) {
-        SharedState st;
-        st.iter = iter;
+    worker_thread.join();
+    receiver_thread.join();
 
-        // Генерация локальных задач на каждой итерации.
-        std::vector<Task> generated = generateTasks(rank, size, iter);
-
-        // Часть задач отдаем в общий пул rank 0, часть оставляем у себя.
-        std::vector<Task> localPart;
-        std::vector<Task> remotePart;
-        localPart.reserve((generated.size() + 1) / 2);
-        remotePart.reserve(generated.size() / 2);
-
-        for (size_t i = 0; i < generated.size(); ++i) {
-            if (i % 2 == 0) localPart.push_back(generated[i]);
-            else remotePart.push_back(generated[i]);
-        }
-
-        {
-            std::lock_guard<std::mutex> lock(st.mtx);
-            for (auto& t : localPart) st.localTasks.push_back(t);
-            st.localNeedWork = st.localTasks.empty();
-        }
-
-        // Если есть чем поделиться, отправляем это на rank 0.
-        if (!remotePart.empty()) {
-            if (rank == 0) {
-                // rank 0 сам забирает свои "лишние" задачи в локальный пул через comm thread.
-                // Для простоты сразу добавим их в локальную очередь rank 0.
-                std::lock_guard<std::mutex> lock(st.mtx);
-                for (auto& t : remotePart) st.localTasks.push_back(t);
-            } else {
-                // Отправляем в общий пул rank 0.
-                int header[2] = {iter, static_cast<int>(remotePart.size())};
-                MPI_Send(header, 2, MPI_INT, 0, TAG_TASKS, MPI_COMM_WORLD);
-                std::vector<int> payload(remotePart.size());
-                for (size_t i = 0; i < remotePart.size(); ++i) payload[i] = remotePart[i].repeatNum;
-                MPI_Send(payload.data(), static_cast<int>(payload.size()), MPI_INT, 0, TAG_TASKS, MPI_COMM_WORLD);
-            }
-        }
-
-        std::thread worker(workerThreadFunc, &st, &globalRes);
-        std::thread comm(commThreadFunc, &st, rank, size);
-
-        // Ожидаем, пока локальная очередь опустеет.
-        // Упрощенная логика: когда worker добрался до пустой очереди, comm thread будет пытаться добрать работу.
-        // В учебной постановке этого достаточно, чтобы показать взаимодействие потоков и MPI.
-        while (true) {
-            {
-                std::lock_guard<std::mutex> lock(st.mtx);
-                if (st.localTasks.empty() && st.localNeedWork) {
-                    // Если новых задач не пришло, считаем, что локальная работа закончена.
-                    // В реальном варианте тут обычно делают более строгую детекцию завершения.
-                    break;
-                }
-            }
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        }
-
-        // Сигнал завершения для потоков текущей итерации.
-        {
-            std::lock_guard<std::mutex> lock(st.mtx);
-            st.shutdown = true;
-            st.iterationDone = true;
-        }
-        st.cv.notify_all();
-
-        // Сообщим rank 0 число выполненных задач данной итерации.
-        long long localDone = 0;
-        {
-            std::lock_guard<std::mutex> lock(st.mtx);
-            localDone = st.localDoneCount;
-        }
-        MPI_Send(&localDone, 1, MPI_LONG_LONG, 0, TAG_DONE, MPI_COMM_WORLD);
-
-        worker.join();
-        comm.join();
-
-        // Глобальная синхронизация между итерациями.
-        MPI_Allreduce(&localDone, &globalDone, 1, MPI_LONG_LONG, MPI_SUM, MPI_COMM_WORLD);
-        if (rank == 0) {
-            std::cout << "Iteration " << iter << ": total completed tasks = " << globalDone << '\n';
-        }
-
-        // На следующей итерации будет новый список задач.
-    }
+    double end_time = MPI_Wtime();
 
     if (rank == 0) {
-        std::cout << "globalRes = " << globalRes << '\n';
+        std::printf("Time spent: %.2lf seconds.\n", end_time - start_time);
     }
 
     MPI_Finalize();
