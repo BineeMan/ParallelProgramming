@@ -2,18 +2,149 @@
 ---
 events:
   -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineSystem.cmake:12 (find_program)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "CMAKE_UNAME"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "uname"
+    candidate_directories:
+      - "/usr/lib64/openmpi/bin/"
+      - "/home/george/.local/bin/"
+      - "/home/george/bin/"
+      - "/usr/share/Modules/bin/"
+      - "/usr/local/bin/"
+      - "/usr/bin/"
+      - "/usr/share/bcc/tools/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/"
+      - "/bin/"
+    searched_directories:
+      - "/usr/lib64/openmpi/bin/uname"
+      - "/home/george/.local/bin/uname"
+      - "/home/george/bin/uname"
+      - "/usr/share/Modules/bin/uname"
+      - "/usr/local/bin/uname"
+    found: "/usr/bin/uname"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+  -
     kind: "message-v1"
     backtrace:
-      - "/usr/share/cmake/Modules/CMakeDetermineSystem.cmake:205 (message)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineSystem.cmake:212 (message)"
       - "CMakeLists.txt:3 (project)"
     message: |
       The system is: Linux - 6.19.14-200.fc43.x86_64 - x86_64
   -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCompiler.cmake:73 (find_program)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCCompiler.cmake:64 (_cmake_find_compiler)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "CMAKE_C_COMPILER"
+    description: "C compiler"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "cc"
+      - "gcc"
+      - "cl"
+      - "bcc"
+      - "xlc"
+      - "icx"
+      - "clang"
+    candidate_directories:
+      - "/usr/lib64/openmpi/bin/"
+      - "/home/george/.local/bin/"
+      - "/home/george/bin/"
+      - "/usr/share/Modules/bin/"
+      - "/usr/local/bin/"
+      - "/usr/bin/"
+      - "/usr/share/bcc/tools/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/"
+    searched_directories:
+      - "/usr/lib64/openmpi/bin/cc"
+      - "/home/george/.local/bin/cc"
+      - "/home/george/bin/cc"
+      - "/usr/share/Modules/bin/cc"
+      - "/usr/local/bin/cc"
+    found: "/usr/bin/cc"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCCompilerId.c.in"
+    candidate_directories:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/"
+    found: "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeCCompilerId.c.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+  -
     kind: "message-v1"
     backtrace:
-      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
-      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
       - "CMakeLists.txt:3 (project)"
     message: |
       Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
@@ -28,14 +159,671 @@ events:
       Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.out"
       
       The C compiler identification is GNU, found in:
-        /mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/3.31.11/CompilerIdC/a.out
+        /home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/4.2.2/CompilerIdC/a.out
       
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "CMAKE_AR"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "ar"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/usr/lib64/openmpi/bin/"
+      - "/home/george/.local/bin/"
+      - "/home/george/bin/"
+      - "/usr/share/Modules/bin/"
+      - "/usr/local/bin/"
+      - "/usr/share/bcc/tools/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/"
+    found: "/usr/bin/ar"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "CMAKE_RANLIB"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "ranlib"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/usr/lib64/openmpi/bin/"
+      - "/home/george/.local/bin/"
+      - "/home/george/bin/"
+      - "/usr/share/Modules/bin/"
+      - "/usr/local/bin/"
+      - "/usr/share/bcc/tools/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/"
+    found: "/usr/bin/ranlib"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "CMAKE_STRIP"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "strip"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/usr/lib64/openmpi/bin/"
+      - "/home/george/.local/bin/"
+      - "/home/george/bin/"
+      - "/usr/share/Modules/bin/"
+      - "/usr/local/bin/"
+      - "/usr/share/bcc/tools/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/"
+    found: "/usr/bin/strip"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "CMAKE_LINKER"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "ld"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/usr/lib64/openmpi/bin/"
+      - "/home/george/.local/bin/"
+      - "/home/george/bin/"
+      - "/usr/share/Modules/bin/"
+      - "/usr/local/bin/"
+      - "/usr/share/bcc/tools/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/"
+    found: "/usr/bin/ld"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "CMAKE_NM"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "nm"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/usr/lib64/openmpi/bin/"
+      - "/home/george/.local/bin/"
+      - "/home/george/bin/"
+      - "/usr/share/Modules/bin/"
+      - "/usr/local/bin/"
+      - "/usr/share/bcc/tools/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/"
+    found: "/usr/bin/nm"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "CMAKE_OBJDUMP"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "objdump"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/usr/lib64/openmpi/bin/"
+      - "/home/george/.local/bin/"
+      - "/home/george/bin/"
+      - "/usr/share/Modules/bin/"
+      - "/usr/local/bin/"
+      - "/usr/share/bcc/tools/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/"
+    found: "/usr/bin/objdump"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "CMAKE_OBJCOPY"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "objcopy"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/usr/lib64/openmpi/bin/"
+      - "/home/george/.local/bin/"
+      - "/home/george/bin/"
+      - "/usr/share/Modules/bin/"
+      - "/usr/local/bin/"
+      - "/usr/share/bcc/tools/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/"
+    found: "/usr/bin/objcopy"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "CMAKE_READELF"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "readelf"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/usr/lib64/openmpi/bin/"
+      - "/home/george/.local/bin/"
+      - "/home/george/bin/"
+      - "/usr/share/Modules/bin/"
+      - "/usr/local/bin/"
+      - "/usr/share/bcc/tools/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/"
+    found: "/usr/bin/readelf"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "CMAKE_DLLTOOL"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "dlltool"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/usr/lib64/openmpi/bin/"
+      - "/home/george/.local/bin/"
+      - "/home/george/bin/"
+      - "/usr/share/Modules/bin/"
+      - "/usr/local/bin/"
+      - "/usr/share/bcc/tools/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/"
+    searched_directories:
+      - "/usr/bin/dlltool"
+      - "/usr/lib64/openmpi/bin/dlltool"
+      - "/home/george/.local/bin/dlltool"
+      - "/home/george/bin/dlltool"
+      - "/usr/share/Modules/bin/dlltool"
+      - "/usr/local/bin/dlltool"
+      - "/usr/share/bcc/tools/dlltool"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/dlltool"
+    found: false
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "CMAKE_ADDR2LINE"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "addr2line"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/usr/lib64/openmpi/bin/"
+      - "/home/george/.local/bin/"
+      - "/home/george/bin/"
+      - "/usr/share/Modules/bin/"
+      - "/usr/local/bin/"
+      - "/usr/share/bcc/tools/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/"
+    found: "/usr/bin/addr2line"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "CMAKE_TAPI"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "tapi"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/usr/lib64/openmpi/bin/"
+      - "/home/george/.local/bin/"
+      - "/home/george/bin/"
+      - "/usr/share/Modules/bin/"
+      - "/usr/local/bin/"
+      - "/usr/share/bcc/tools/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/"
+    searched_directories:
+      - "/usr/bin/tapi"
+      - "/usr/lib64/openmpi/bin/tapi"
+      - "/home/george/.local/bin/tapi"
+      - "/home/george/bin/tapi"
+      - "/usr/share/Modules/bin/tapi"
+      - "/usr/local/bin/tapi"
+      - "/usr/share/bcc/tools/tapi"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/tapi"
+    found: false
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/Compiler/GNU-FindBinUtils.cmake:18 (find_program)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCCompiler.cmake:201 (include)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "CMAKE_C_COMPILER_AR"
+    description: "A wrapper around 'ar' adding the appropriate '--plugin' option for the GCC compiler"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "gcc-ar-15.2"
+      - "gcc-ar-15"
+      - "gcc-ar15"
+      - "gcc-ar"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/usr/lib64/openmpi/bin/"
+      - "/home/george/.local/bin/"
+      - "/home/george/bin/"
+      - "/usr/share/Modules/bin/"
+      - "/usr/local/bin/"
+      - "/usr/share/bcc/tools/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/"
+    searched_directories:
+      - "/usr/bin/gcc-ar-15.2"
+      - "/usr/lib64/openmpi/bin/gcc-ar-15.2"
+      - "/home/george/.local/bin/gcc-ar-15.2"
+      - "/home/george/bin/gcc-ar-15.2"
+      - "/usr/share/Modules/bin/gcc-ar-15.2"
+      - "/usr/local/bin/gcc-ar-15.2"
+      - "/usr/share/bcc/tools/gcc-ar-15.2"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/gcc-ar-15.2"
+      - "/usr/bin/gcc-ar-15"
+      - "/usr/lib64/openmpi/bin/gcc-ar-15"
+      - "/home/george/.local/bin/gcc-ar-15"
+      - "/home/george/bin/gcc-ar-15"
+      - "/usr/share/Modules/bin/gcc-ar-15"
+      - "/usr/local/bin/gcc-ar-15"
+      - "/usr/share/bcc/tools/gcc-ar-15"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/gcc-ar-15"
+      - "/usr/bin/gcc-ar15"
+      - "/usr/lib64/openmpi/bin/gcc-ar15"
+      - "/home/george/.local/bin/gcc-ar15"
+      - "/home/george/bin/gcc-ar15"
+      - "/usr/share/Modules/bin/gcc-ar15"
+      - "/usr/local/bin/gcc-ar15"
+      - "/usr/share/bcc/tools/gcc-ar15"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/gcc-ar15"
+    found: "/usr/bin/gcc-ar"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/Compiler/GNU-FindBinUtils.cmake:30 (find_program)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCCompiler.cmake:201 (include)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "CMAKE_C_COMPILER_RANLIB"
+    description: "A wrapper around 'ranlib' adding the appropriate '--plugin' option for the GCC compiler"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "gcc-ranlib-15.2"
+      - "gcc-ranlib-15"
+      - "gcc-ranlib15"
+      - "gcc-ranlib"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/usr/lib64/openmpi/bin/"
+      - "/home/george/.local/bin/"
+      - "/home/george/bin/"
+      - "/usr/share/Modules/bin/"
+      - "/usr/local/bin/"
+      - "/usr/share/bcc/tools/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/"
+    searched_directories:
+      - "/usr/bin/gcc-ranlib-15.2"
+      - "/usr/lib64/openmpi/bin/gcc-ranlib-15.2"
+      - "/home/george/.local/bin/gcc-ranlib-15.2"
+      - "/home/george/bin/gcc-ranlib-15.2"
+      - "/usr/share/Modules/bin/gcc-ranlib-15.2"
+      - "/usr/local/bin/gcc-ranlib-15.2"
+      - "/usr/share/bcc/tools/gcc-ranlib-15.2"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/gcc-ranlib-15.2"
+      - "/usr/bin/gcc-ranlib-15"
+      - "/usr/lib64/openmpi/bin/gcc-ranlib-15"
+      - "/home/george/.local/bin/gcc-ranlib-15"
+      - "/home/george/bin/gcc-ranlib-15"
+      - "/usr/share/Modules/bin/gcc-ranlib-15"
+      - "/usr/local/bin/gcc-ranlib-15"
+      - "/usr/share/bcc/tools/gcc-ranlib-15"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/gcc-ranlib-15"
+      - "/usr/bin/gcc-ranlib15"
+      - "/usr/lib64/openmpi/bin/gcc-ranlib15"
+      - "/home/george/.local/bin/gcc-ranlib15"
+      - "/home/george/bin/gcc-ranlib15"
+      - "/usr/share/Modules/bin/gcc-ranlib15"
+      - "/usr/local/bin/gcc-ranlib15"
+      - "/usr/share/bcc/tools/gcc-ranlib15"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/gcc-ranlib15"
+    found: "/usr/bin/gcc-ranlib"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCompiler.cmake:54 (find_program)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:69 (_cmake_find_compiler)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "CMAKE_CXX_COMPILER"
+    description: "CXX compiler"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "c++"
+      - "CC"
+      - "g++"
+      - "aCC"
+      - "cl"
+      - "bcc"
+      - "xlC"
+      - "icpx"
+      - "icx"
+      - "clang++"
+    candidate_directories:
+      - "/usr/bin/"
+    found: "/usr/bin/c++"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCXXCompilerId.cpp.in"
+    candidate_directories:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/"
+    found: "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeCXXCompilerId.cpp.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
   -
     kind: "message-v1"
     backtrace:
-      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
-      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
       - "CMakeLists.txt:3 (project)"
     message: |
       Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
@@ -50,19 +838,153 @@ events:
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
       
       The CXX compiler identification is GNU, found in:
-        /mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/3.31.11/CompilerIdCXX/a.out
+        /home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/4.2.2/CompilerIdCXX/a.out
       
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/Compiler/GNU-FindBinUtils.cmake:18 (find_program)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:207 (include)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "CMAKE_CXX_COMPILER_AR"
+    description: "A wrapper around 'ar' adding the appropriate '--plugin' option for the GCC compiler"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "gcc-ar-15.2"
+      - "gcc-ar-15"
+      - "gcc-ar15"
+      - "gcc-ar"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/usr/lib64/openmpi/bin/"
+      - "/home/george/.local/bin/"
+      - "/home/george/bin/"
+      - "/usr/share/Modules/bin/"
+      - "/usr/local/bin/"
+      - "/usr/share/bcc/tools/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/"
+    searched_directories:
+      - "/usr/bin/gcc-ar-15.2"
+      - "/usr/lib64/openmpi/bin/gcc-ar-15.2"
+      - "/home/george/.local/bin/gcc-ar-15.2"
+      - "/home/george/bin/gcc-ar-15.2"
+      - "/usr/share/Modules/bin/gcc-ar-15.2"
+      - "/usr/local/bin/gcc-ar-15.2"
+      - "/usr/share/bcc/tools/gcc-ar-15.2"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/gcc-ar-15.2"
+      - "/usr/bin/gcc-ar-15"
+      - "/usr/lib64/openmpi/bin/gcc-ar-15"
+      - "/home/george/.local/bin/gcc-ar-15"
+      - "/home/george/bin/gcc-ar-15"
+      - "/usr/share/Modules/bin/gcc-ar-15"
+      - "/usr/local/bin/gcc-ar-15"
+      - "/usr/share/bcc/tools/gcc-ar-15"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/gcc-ar-15"
+      - "/usr/bin/gcc-ar15"
+      - "/usr/lib64/openmpi/bin/gcc-ar15"
+      - "/home/george/.local/bin/gcc-ar15"
+      - "/home/george/bin/gcc-ar15"
+      - "/usr/share/Modules/bin/gcc-ar15"
+      - "/usr/local/bin/gcc-ar15"
+      - "/usr/share/bcc/tools/gcc-ar15"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/gcc-ar15"
+    found: "/usr/bin/gcc-ar"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/Compiler/GNU-FindBinUtils.cmake:30 (find_program)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:207 (include)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "CMAKE_CXX_COMPILER_RANLIB"
+    description: "A wrapper around 'ranlib' adding the appropriate '--plugin' option for the GCC compiler"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "gcc-ranlib-15.2"
+      - "gcc-ranlib-15"
+      - "gcc-ranlib15"
+      - "gcc-ranlib"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/usr/lib64/openmpi/bin/"
+      - "/home/george/.local/bin/"
+      - "/home/george/bin/"
+      - "/usr/share/Modules/bin/"
+      - "/usr/local/bin/"
+      - "/usr/share/bcc/tools/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/"
+    searched_directories:
+      - "/usr/bin/gcc-ranlib-15.2"
+      - "/usr/lib64/openmpi/bin/gcc-ranlib-15.2"
+      - "/home/george/.local/bin/gcc-ranlib-15.2"
+      - "/home/george/bin/gcc-ranlib-15.2"
+      - "/usr/share/Modules/bin/gcc-ranlib-15.2"
+      - "/usr/local/bin/gcc-ranlib-15.2"
+      - "/usr/share/bcc/tools/gcc-ranlib-15.2"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/gcc-ranlib-15.2"
+      - "/usr/bin/gcc-ranlib-15"
+      - "/usr/lib64/openmpi/bin/gcc-ranlib-15"
+      - "/home/george/.local/bin/gcc-ranlib-15"
+      - "/home/george/bin/gcc-ranlib-15"
+      - "/usr/share/Modules/bin/gcc-ranlib-15"
+      - "/usr/local/bin/gcc-ranlib-15"
+      - "/usr/share/bcc/tools/gcc-ranlib-15"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/gcc-ranlib-15"
+      - "/usr/bin/gcc-ranlib15"
+      - "/usr/lib64/openmpi/bin/gcc-ranlib15"
+      - "/home/george/.local/bin/gcc-ranlib15"
+      - "/home/george/bin/gcc-ranlib15"
+      - "/usr/share/Modules/bin/gcc-ranlib15"
+      - "/usr/local/bin/gcc-ranlib15"
+      - "/usr/share/bcc/tools/gcc-ranlib15"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/gcc-ranlib15"
+    found: "/usr/bin/gcc-ranlib"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
   -
     kind: "try_compile-v1"
     backtrace:
-      - "/usr/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
-      - "/usr/share/cmake/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCompilerABI.cmake:83 (try_compile)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
       - "CMakeLists.txt:3 (project)"
     checks:
       - "Detecting C compiler ABI info"
     directories:
-      source: "/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-Fgpfk4"
-      binary: "/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-Fgpfk4"
+      source: "/home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-7L5ahP"
+      binary: "/home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-7L5ahP"
     cmakeVariables:
       CMAKE_C_FLAGS: ""
       CMAKE_C_FLAGS_DEBUG: "-g"
@@ -71,13 +993,10 @@ events:
       variable: "CMAKE_C_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: '/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-Fgpfk4'
+        Change Dir: '/home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-7L5ahP'
         
-        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_25f5e/fast
-        /usr/bin/gmake  -f CMakeFiles/cmTC_25f5e.dir/build.make CMakeFiles/cmTC_25f5e.dir/build
-        gmake[1]: Entering directory '/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-Fgpfk4'
-        Building C object CMakeFiles/cmTC_25f5e.dir/CMakeCCompilerABI.c.o
-        /usr/bin/cc   -v -o CMakeFiles/cmTC_25f5e.dir/CMakeCCompilerABI.c.o -c /usr/share/cmake/Modules/CMakeCCompilerABI.c
+        Run Build Command(s): /mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/ninja -v cmTC_e1ef0
+        [1/2] /usr/bin/cc   -fdiagnostics-color=always   -v -o CMakeFiles/cmTC_e1ef0.dir/CMakeCCompilerABI.c.o -c /mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeCCompilerABI.c
         Using built-in specs.
         COLLECT_GCC=/usr/bin/cc
         OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
@@ -87,8 +1006,8 @@ events:
         Thread model: posix
         Supported LTO compression algorithms: zlib zstd
         gcc version 15.2.1 20260123 (Red Hat 15.2.1-7) (GCC) 
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_25f5e.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_25f5e.dir/'
-         /usr/libexec/gcc/x86_64-redhat-linux/15/cc1 -quiet -v /usr/share/cmake/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_25f5e.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mtune=generic -march=x86-64 -version -o /tmp/cckWbtD1.s
+        COLLECT_GCC_OPTIONS='-fdiagnostics-color=always' '-v' '-o' 'CMakeFiles/cmTC_e1ef0.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_e1ef0.dir/'
+         /usr/libexec/gcc/x86_64-redhat-linux/15/cc1 -quiet -v /mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_e1ef0.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mtune=generic -march=x86-64 -version -fdiagnostics-color=always -o /tmp/cchphR00.s
         GNU C23 (GCC) version 15.2.1 20260123 (Red Hat 15.2.1-7) (x86_64-redhat-linux)
         	compiled by GNU C version 15.2.1 20260123 (Red Hat 15.2.1-7), GMP version 6.3.0, MPFR version 4.2.2, MPC version 1.3.1, isl version isl-0.24-GMP
         
@@ -102,14 +1021,13 @@ events:
          /usr/include
         End of search list.
         Compiler executable checksum: 26be2a77f083688cd617fb87abbd954c
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_25f5e.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_25f5e.dir/'
-         as -v --64 -o CMakeFiles/cmTC_25f5e.dir/CMakeCCompilerABI.c.o /tmp/cckWbtD1.s
+        COLLECT_GCC_OPTIONS='-fdiagnostics-color=always' '-v' '-o' 'CMakeFiles/cmTC_e1ef0.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_e1ef0.dir/'
+         as -v --64 -o CMakeFiles/cmTC_e1ef0.dir/CMakeCCompilerABI.c.o /tmp/cchphR00.s
         GNU assembler version 2.45.1 (x86_64-redhat-linux) using BFD version version 2.45.1-4.fc43
         COMPILER_PATH=/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/
         LIBRARY_PATH=/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../:/lib/:/usr/lib/
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_25f5e.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_25f5e.dir/CMakeCCompilerABI.c.'
-        Linking C executable cmTC_25f5e
-        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_25f5e.dir/link.txt --verbose=1
+        COLLECT_GCC_OPTIONS='-fdiagnostics-color=always' '-v' '-o' 'CMakeFiles/cmTC_e1ef0.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_e1ef0.dir/CMakeCCompilerABI.c.'
+        [2/2] : && /usr/bin/cc  -v -Wl,-v CMakeFiles/cmTC_e1ef0.dir/CMakeCCompilerABI.c.o -o cmTC_e1ef0   && :
         Using built-in specs.
         COLLECT_GCC=/usr/bin/cc
         COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper
@@ -122,21 +1040,19 @@ events:
         gcc version 15.2.1 20260123 (Red Hat 15.2.1-7) (GCC) 
         COMPILER_PATH=/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/
         LIBRARY_PATH=/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../:/lib/:/usr/lib/
-        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_25f5e' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_25f5e.'
-         /usr/libexec/gcc/x86_64-redhat-linux/15/collect2 -plugin /usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper -plugin-opt=-fresolution=/tmp/cc9PT7dw.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --no-add-needed --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_25f5e /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/15 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_25f5e.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_e1ef0' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_e1ef0.'
+         /usr/libexec/gcc/x86_64-redhat-linux/15/collect2 -plugin /usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccyOs0bi.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --no-add-needed --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_e1ef0 /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/15 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_e1ef0.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o
         collect2 version 15.2.1 20260123 (Red Hat 15.2.1-7)
-        /usr/bin/ld -plugin /usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper -plugin-opt=-fresolution=/tmp/cc9PT7dw.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --no-add-needed --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_25f5e /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/15 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_25f5e.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o
+        /usr/bin/ld -plugin /usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccyOs0bi.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --no-add-needed --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_e1ef0 /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/15 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_e1ef0.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o
         GNU ld version 2.45.1-4.fc43
-        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_25f5e' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_25f5e.'
-        /usr/bin/cc  -v -Wl,-v CMakeFiles/cmTC_25f5e.dir/CMakeCCompilerABI.c.o -o cmTC_25f5e
-        gmake[1]: Leaving directory '/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-Fgpfk4'
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_e1ef0' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_e1ef0.'
         
       exitCode: 0
   -
     kind: "message-v1"
     backtrace:
-      - "/usr/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:182 (message)"
-      - "/usr/share/cmake/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCompilerABI.cmake:217 (message)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
       - "CMakeLists.txt:3 (project)"
     message: |
       Parsed C implicit include dir info: rv=done
@@ -155,20 +1071,17 @@ events:
   -
     kind: "message-v1"
     backtrace:
-      - "/usr/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
-      - "/usr/share/cmake/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCompilerABI.cmake:253 (message)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
       - "CMakeLists.txt:3 (project)"
     message: |
       Parsed C implicit link information:
-        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
-        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?))("|,| |$)]
-        ignore line: [Change Dir: '/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-Fgpfk4']
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|"|[0-9]+>[ 	-]*Build:[ 	0-9]+ ms[ 	]*)?[ 	]*(([^"]*[/\\])?(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)))("|,| |$)]
+        ignore line: [Change Dir: '/home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-7L5ahP']
         ignore line: []
-        ignore line: [Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_25f5e/fast]
-        ignore line: [/usr/bin/gmake  -f CMakeFiles/cmTC_25f5e.dir/build.make CMakeFiles/cmTC_25f5e.dir/build]
-        ignore line: [gmake[1]: Entering directory '/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-Fgpfk4']
-        ignore line: [Building C object CMakeFiles/cmTC_25f5e.dir/CMakeCCompilerABI.c.o]
-        ignore line: [/usr/bin/cc   -v -o CMakeFiles/cmTC_25f5e.dir/CMakeCCompilerABI.c.o -c /usr/share/cmake/Modules/CMakeCCompilerABI.c]
+        ignore line: [Run Build Command(s): /mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/ninja -v cmTC_e1ef0]
+        ignore line: [[1/2] /usr/bin/cc   -fdiagnostics-color=always   -v -o CMakeFiles/cmTC_e1ef0.dir/CMakeCCompilerABI.c.o -c /mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeCCompilerABI.c]
         ignore line: [Using built-in specs.]
         ignore line: [COLLECT_GCC=/usr/bin/cc]
         ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa]
@@ -178,8 +1091,8 @@ events:
         ignore line: [Thread model: posix]
         ignore line: [Supported LTO compression algorithms: zlib zstd]
         ignore line: [gcc version 15.2.1 20260123 (Red Hat 15.2.1-7) (GCC) ]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_25f5e.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_25f5e.dir/']
-        ignore line: [ /usr/libexec/gcc/x86_64-redhat-linux/15/cc1 -quiet -v /usr/share/cmake/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_25f5e.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mtune=generic -march=x86-64 -version -o /tmp/cckWbtD1.s]
+        ignore line: [COLLECT_GCC_OPTIONS='-fdiagnostics-color=always' '-v' '-o' 'CMakeFiles/cmTC_e1ef0.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_e1ef0.dir/']
+        ignore line: [ /usr/libexec/gcc/x86_64-redhat-linux/15/cc1 -quiet -v /mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_e1ef0.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mtune=generic -march=x86-64 -version -fdiagnostics-color=always -o /tmp/cchphR00.s]
         ignore line: [GNU C23 (GCC) version 15.2.1 20260123 (Red Hat 15.2.1-7) (x86_64-redhat-linux)]
         ignore line: [	compiled by GNU C version 15.2.1 20260123 (Red Hat 15.2.1-7)  GMP version 6.3.0  MPFR version 4.2.2  MPC version 1.3.1  isl version isl-0.24-GMP]
         ignore line: []
@@ -193,14 +1106,13 @@ events:
         ignore line: [ /usr/include]
         ignore line: [End of search list.]
         ignore line: [Compiler executable checksum: 26be2a77f083688cd617fb87abbd954c]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_25f5e.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_25f5e.dir/']
-        ignore line: [ as -v --64 -o CMakeFiles/cmTC_25f5e.dir/CMakeCCompilerABI.c.o /tmp/cckWbtD1.s]
+        ignore line: [COLLECT_GCC_OPTIONS='-fdiagnostics-color=always' '-v' '-o' 'CMakeFiles/cmTC_e1ef0.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_e1ef0.dir/']
+        ignore line: [ as -v --64 -o CMakeFiles/cmTC_e1ef0.dir/CMakeCCompilerABI.c.o /tmp/cchphR00.s]
         ignore line: [GNU assembler version 2.45.1 (x86_64-redhat-linux) using BFD version version 2.45.1-4.fc43]
         ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/]
         ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../:/lib/:/usr/lib/]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_25f5e.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_25f5e.dir/CMakeCCompilerABI.c.']
-        ignore line: [Linking C executable cmTC_25f5e]
-        ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_25f5e.dir/link.txt --verbose=1]
+        ignore line: [COLLECT_GCC_OPTIONS='-fdiagnostics-color=always' '-v' '-o' 'CMakeFiles/cmTC_e1ef0.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_e1ef0.dir/CMakeCCompilerABI.c.']
+        ignore line: [[2/2] : && /usr/bin/cc  -v -Wl -v CMakeFiles/cmTC_e1ef0.dir/CMakeCCompilerABI.c.o -o cmTC_e1ef0   && :]
         ignore line: [Using built-in specs.]
         ignore line: [COLLECT_GCC=/usr/bin/cc]
         ignore line: [COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper]
@@ -213,13 +1125,13 @@ events:
         ignore line: [gcc version 15.2.1 20260123 (Red Hat 15.2.1-7) (GCC) ]
         ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/]
         ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../:/lib/:/usr/lib/]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_25f5e' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_25f5e.']
-        link line: [ /usr/libexec/gcc/x86_64-redhat-linux/15/collect2 -plugin /usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper -plugin-opt=-fresolution=/tmp/cc9PT7dw.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --no-add-needed --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_25f5e /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/15 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_25f5e.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_e1ef0' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_e1ef0.']
+        link line: [ /usr/libexec/gcc/x86_64-redhat-linux/15/collect2 -plugin /usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccyOs0bi.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --no-add-needed --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_e1ef0 /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/15 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_e1ef0.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o]
           arg [/usr/libexec/gcc/x86_64-redhat-linux/15/collect2] ==> ignore
           arg [-plugin] ==> ignore
           arg [/usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so] ==> ignore
           arg [-plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper] ==> ignore
-          arg [-plugin-opt=-fresolution=/tmp/cc9PT7dw.res] ==> ignore
+          arg [-plugin-opt=-fresolution=/tmp/ccyOs0bi.res] ==> ignore
           arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
           arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
           arg [-plugin-opt=-pass-through=-lc] ==> ignore
@@ -234,7 +1146,7 @@ events:
           arg [-dynamic-linker] ==> ignore
           arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
           arg [-o] ==> ignore
-          arg [cmTC_25f5e] ==> ignore
+          arg [cmTC_e1ef0] ==> ignore
           arg [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o] ==> obj [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o]
           arg [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o] ==> obj [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o]
           arg [/usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o] ==> obj [/usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o]
@@ -246,7 +1158,7 @@ events:
           arg [-L/lib] ==> dir [/lib]
           arg [-L/usr/lib] ==> dir [/usr/lib]
           arg [-v] ==> ignore
-          arg [CMakeFiles/cmTC_25f5e.dir/CMakeCCompilerABI.c.o] ==> ignore
+          arg [CMakeFiles/cmTC_e1ef0.dir/CMakeCCompilerABI.c.o] ==> ignore
           arg [-lgcc] ==> lib [gcc]
           arg [--push-state] ==> ignore
           arg [--as-needed] ==> ignore
@@ -261,7 +1173,7 @@ events:
           arg [/usr/lib/gcc/x86_64-redhat-linux/15/crtend.o] ==> obj [/usr/lib/gcc/x86_64-redhat-linux/15/crtend.o]
           arg [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o] ==> obj [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o]
         ignore line: [collect2 version 15.2.1 20260123 (Red Hat 15.2.1-7)]
-        ignore line: [/usr/bin/ld -plugin /usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper -plugin-opt=-fresolution=/tmp/cc9PT7dw.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --no-add-needed --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_25f5e /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/15 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_25f5e.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o]
+        ignore line: [/usr/bin/ld -plugin /usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccyOs0bi.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --no-add-needed --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_e1ef0 /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/15 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_e1ef0.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o]
         linker tool for 'C': /usr/bin/ld
         collapse obj [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o] ==> [/usr/lib64/crt1.o]
         collapse obj [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o] ==> [/usr/lib64/crti.o]
@@ -282,9 +1194,9 @@ events:
   -
     kind: "message-v1"
     backtrace:
-      - "/usr/share/cmake/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
-      - "/usr/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
-      - "/usr/share/cmake/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/Internal/CMakeDetermineLinkerId.cmake:38 (message)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCompilerABI.cmake:299 (cmake_determine_linker_id)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
       - "CMakeLists.txt:3 (project)"
     message: |
       Running the C compiler's linker: "/usr/bin/ld" "-v"
@@ -292,14 +1204,14 @@ events:
   -
     kind: "try_compile-v1"
     backtrace:
-      - "/usr/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
-      - "/usr/share/cmake/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCompilerABI.cmake:83 (try_compile)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
       - "CMakeLists.txt:3 (project)"
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-k1qWZn"
-      binary: "/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-k1qWZn"
+      source: "/home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-ge84Nu"
+      binary: "/home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-ge84Nu"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
       CMAKE_CXX_FLAGS_DEBUG: "-g"
@@ -309,13 +1221,10 @@ events:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: '/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-k1qWZn'
+        Change Dir: '/home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-ge84Nu'
         
-        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_dd502/fast
-        /usr/bin/gmake  -f CMakeFiles/cmTC_dd502.dir/build.make CMakeFiles/cmTC_dd502.dir/build
-        gmake[1]: Entering directory '/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-k1qWZn'
-        Building CXX object CMakeFiles/cmTC_dd502.dir/CMakeCXXCompilerABI.cpp.o
-        /usr/bin/c++   -v -o CMakeFiles/cmTC_dd502.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake/Modules/CMakeCXXCompilerABI.cpp
+        Run Build Command(s): /mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/ninja -v cmTC_75a50
+        [1/2] /usr/bin/c++   -fdiagnostics-color=always   -v -o CMakeFiles/cmTC_75a50.dir/CMakeCXXCompilerABI.cpp.o -c /mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp
         Using built-in specs.
         COLLECT_GCC=/usr/bin/c++
         OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
@@ -325,8 +1234,8 @@ events:
         Thread model: posix
         Supported LTO compression algorithms: zlib zstd
         gcc version 15.2.1 20260123 (Red Hat 15.2.1-7) (GCC) 
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_dd502.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_dd502.dir/'
-         /usr/libexec/gcc/x86_64-redhat-linux/15/cc1plus -quiet -v -D_GNU_SOURCE /usr/share/cmake/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_dd502.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -o /tmp/ccCfFqcS.s
+        COLLECT_GCC_OPTIONS='-fdiagnostics-color=always' '-v' '-o' 'CMakeFiles/cmTC_75a50.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_75a50.dir/'
+         /usr/libexec/gcc/x86_64-redhat-linux/15/cc1plus -quiet -v -D_GNU_SOURCE /mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_75a50.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -fdiagnostics-color=always -o /tmp/cc5ui2Xx.s
         GNU C++17 (GCC) version 15.2.1 20260123 (Red Hat 15.2.1-7) (x86_64-redhat-linux)
         	compiled by GNU C version 15.2.1 20260123 (Red Hat 15.2.1-7), GMP version 6.3.0, MPFR version 4.2.2, MPC version 1.3.1, isl version isl-0.24-GMP
         
@@ -343,14 +1252,13 @@ events:
          /usr/include
         End of search list.
         Compiler executable checksum: 61fbb778c0a8c441a1c0ce3e680cc1db
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_dd502.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_dd502.dir/'
-         as -v --64 -o CMakeFiles/cmTC_dd502.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccCfFqcS.s
+        COLLECT_GCC_OPTIONS='-fdiagnostics-color=always' '-v' '-o' 'CMakeFiles/cmTC_75a50.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_75a50.dir/'
+         as -v --64 -o CMakeFiles/cmTC_75a50.dir/CMakeCXXCompilerABI.cpp.o /tmp/cc5ui2Xx.s
         GNU assembler version 2.45.1 (x86_64-redhat-linux) using BFD version version 2.45.1-4.fc43
         COMPILER_PATH=/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/
         LIBRARY_PATH=/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../:/lib/:/usr/lib/
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_dd502.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_dd502.dir/CMakeCXXCompilerABI.cpp.'
-        Linking CXX executable cmTC_dd502
-        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_dd502.dir/link.txt --verbose=1
+        COLLECT_GCC_OPTIONS='-fdiagnostics-color=always' '-v' '-o' 'CMakeFiles/cmTC_75a50.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_75a50.dir/CMakeCXXCompilerABI.cpp.'
+        [2/2] : && /usr/bin/c++  -v -Wl,-v CMakeFiles/cmTC_75a50.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_75a50   && :
         Using built-in specs.
         COLLECT_GCC=/usr/bin/c++
         COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper
@@ -363,21 +1271,19 @@ events:
         gcc version 15.2.1 20260123 (Red Hat 15.2.1-7) (GCC) 
         COMPILER_PATH=/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/
         LIBRARY_PATH=/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../:/lib/:/usr/lib/
-        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_dd502' '-foffload-options=-l_GCC_stdc++' '-foffload-options=-l_GCC_m' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_dd502.'
-         /usr/libexec/gcc/x86_64-redhat-linux/15/collect2 -plugin /usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccoYUyjG.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --no-add-needed --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_dd502 /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/15 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_dd502.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_75a50' '-foffload-options=-l_GCC_stdc++' '-foffload-options=-l_GCC_m' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_75a50.'
+         /usr/libexec/gcc/x86_64-redhat-linux/15/collect2 -plugin /usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccH82Y1b.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --no-add-needed --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_75a50 /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/15 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_75a50.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o
         collect2 version 15.2.1 20260123 (Red Hat 15.2.1-7)
-        /usr/bin/ld -plugin /usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccoYUyjG.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --no-add-needed --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_dd502 /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/15 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_dd502.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o
+        /usr/bin/ld -plugin /usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccH82Y1b.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --no-add-needed --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_75a50 /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/15 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_75a50.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o
         GNU ld version 2.45.1-4.fc43
-        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_dd502' '-foffload-options=-l_GCC_stdc++' '-foffload-options=-l_GCC_m' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_dd502.'
-        /usr/bin/c++  -v -Wl,-v CMakeFiles/cmTC_dd502.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_dd502
-        gmake[1]: Leaving directory '/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-k1qWZn'
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_75a50' '-foffload-options=-l_GCC_stdc++' '-foffload-options=-l_GCC_m' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_75a50.'
         
       exitCode: 0
   -
     kind: "message-v1"
     backtrace:
-      - "/usr/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:182 (message)"
-      - "/usr/share/cmake/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCompilerABI.cmake:217 (message)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
       - "CMakeLists.txt:3 (project)"
     message: |
       Parsed CXX implicit include dir info: rv=done
@@ -402,20 +1308,17 @@ events:
   -
     kind: "message-v1"
     backtrace:
-      - "/usr/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
-      - "/usr/share/cmake/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCompilerABI.cmake:253 (message)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
       - "CMakeLists.txt:3 (project)"
     message: |
       Parsed CXX implicit link information:
-        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
-        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?))("|,| |$)]
-        ignore line: [Change Dir: '/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-k1qWZn']
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|"|[0-9]+>[ 	-]*Build:[ 	0-9]+ ms[ 	]*)?[ 	]*(([^"]*[/\\])?(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)))("|,| |$)]
+        ignore line: [Change Dir: '/home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-ge84Nu']
         ignore line: []
-        ignore line: [Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_dd502/fast]
-        ignore line: [/usr/bin/gmake  -f CMakeFiles/cmTC_dd502.dir/build.make CMakeFiles/cmTC_dd502.dir/build]
-        ignore line: [gmake[1]: Entering directory '/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-k1qWZn']
-        ignore line: [Building CXX object CMakeFiles/cmTC_dd502.dir/CMakeCXXCompilerABI.cpp.o]
-        ignore line: [/usr/bin/c++   -v -o CMakeFiles/cmTC_dd502.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [Run Build Command(s): /mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/ninja -v cmTC_75a50]
+        ignore line: [[1/2] /usr/bin/c++   -fdiagnostics-color=always   -v -o CMakeFiles/cmTC_75a50.dir/CMakeCXXCompilerABI.cpp.o -c /mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp]
         ignore line: [Using built-in specs.]
         ignore line: [COLLECT_GCC=/usr/bin/c++]
         ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa]
@@ -425,8 +1328,8 @@ events:
         ignore line: [Thread model: posix]
         ignore line: [Supported LTO compression algorithms: zlib zstd]
         ignore line: [gcc version 15.2.1 20260123 (Red Hat 15.2.1-7) (GCC) ]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_dd502.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_dd502.dir/']
-        ignore line: [ /usr/libexec/gcc/x86_64-redhat-linux/15/cc1plus -quiet -v -D_GNU_SOURCE /usr/share/cmake/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_dd502.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -o /tmp/ccCfFqcS.s]
+        ignore line: [COLLECT_GCC_OPTIONS='-fdiagnostics-color=always' '-v' '-o' 'CMakeFiles/cmTC_75a50.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_75a50.dir/']
+        ignore line: [ /usr/libexec/gcc/x86_64-redhat-linux/15/cc1plus -quiet -v -D_GNU_SOURCE /mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_75a50.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -fdiagnostics-color=always -o /tmp/cc5ui2Xx.s]
         ignore line: [GNU C++17 (GCC) version 15.2.1 20260123 (Red Hat 15.2.1-7) (x86_64-redhat-linux)]
         ignore line: [	compiled by GNU C version 15.2.1 20260123 (Red Hat 15.2.1-7)  GMP version 6.3.0  MPFR version 4.2.2  MPC version 1.3.1  isl version isl-0.24-GMP]
         ignore line: []
@@ -443,14 +1346,13 @@ events:
         ignore line: [ /usr/include]
         ignore line: [End of search list.]
         ignore line: [Compiler executable checksum: 61fbb778c0a8c441a1c0ce3e680cc1db]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_dd502.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_dd502.dir/']
-        ignore line: [ as -v --64 -o CMakeFiles/cmTC_dd502.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccCfFqcS.s]
+        ignore line: [COLLECT_GCC_OPTIONS='-fdiagnostics-color=always' '-v' '-o' 'CMakeFiles/cmTC_75a50.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_75a50.dir/']
+        ignore line: [ as -v --64 -o CMakeFiles/cmTC_75a50.dir/CMakeCXXCompilerABI.cpp.o /tmp/cc5ui2Xx.s]
         ignore line: [GNU assembler version 2.45.1 (x86_64-redhat-linux) using BFD version version 2.45.1-4.fc43]
         ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/]
         ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../:/lib/:/usr/lib/]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_dd502.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_dd502.dir/CMakeCXXCompilerABI.cpp.']
-        ignore line: [Linking CXX executable cmTC_dd502]
-        ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_dd502.dir/link.txt --verbose=1]
+        ignore line: [COLLECT_GCC_OPTIONS='-fdiagnostics-color=always' '-v' '-o' 'CMakeFiles/cmTC_75a50.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_75a50.dir/CMakeCXXCompilerABI.cpp.']
+        ignore line: [[2/2] : && /usr/bin/c++  -v -Wl -v CMakeFiles/cmTC_75a50.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_75a50   && :]
         ignore line: [Using built-in specs.]
         ignore line: [COLLECT_GCC=/usr/bin/c++]
         ignore line: [COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper]
@@ -463,13 +1365,13 @@ events:
         ignore line: [gcc version 15.2.1 20260123 (Red Hat 15.2.1-7) (GCC) ]
         ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/]
         ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../:/lib/:/usr/lib/]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_dd502' '-foffload-options=-l_GCC_stdc++' '-foffload-options=-l_GCC_m' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_dd502.']
-        link line: [ /usr/libexec/gcc/x86_64-redhat-linux/15/collect2 -plugin /usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccoYUyjG.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --no-add-needed --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_dd502 /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/15 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_dd502.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_75a50' '-foffload-options=-l_GCC_stdc++' '-foffload-options=-l_GCC_m' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_75a50.']
+        link line: [ /usr/libexec/gcc/x86_64-redhat-linux/15/collect2 -plugin /usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccH82Y1b.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --no-add-needed --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_75a50 /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/15 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_75a50.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o]
           arg [/usr/libexec/gcc/x86_64-redhat-linux/15/collect2] ==> ignore
           arg [-plugin] ==> ignore
           arg [/usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so] ==> ignore
           arg [-plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper] ==> ignore
-          arg [-plugin-opt=-fresolution=/tmp/ccoYUyjG.res] ==> ignore
+          arg [-plugin-opt=-fresolution=/tmp/ccH82Y1b.res] ==> ignore
           arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
           arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
           arg [-plugin-opt=-pass-through=-lc] ==> ignore
@@ -484,7 +1386,7 @@ events:
           arg [-dynamic-linker] ==> ignore
           arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
           arg [-o] ==> ignore
-          arg [cmTC_dd502] ==> ignore
+          arg [cmTC_75a50] ==> ignore
           arg [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o] ==> obj [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o]
           arg [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o] ==> obj [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o]
           arg [/usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o] ==> obj [/usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o]
@@ -496,7 +1398,7 @@ events:
           arg [-L/lib] ==> dir [/lib]
           arg [-L/usr/lib] ==> dir [/usr/lib]
           arg [-v] ==> ignore
-          arg [CMakeFiles/cmTC_dd502.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+          arg [CMakeFiles/cmTC_75a50.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
           arg [-lstdc++] ==> lib [stdc++]
           arg [-lm] ==> lib [m]
           arg [-lgcc_s] ==> lib [gcc_s]
@@ -507,7 +1409,7 @@ events:
           arg [/usr/lib/gcc/x86_64-redhat-linux/15/crtend.o] ==> obj [/usr/lib/gcc/x86_64-redhat-linux/15/crtend.o]
           arg [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o] ==> obj [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o]
         ignore line: [collect2 version 15.2.1 20260123 (Red Hat 15.2.1-7)]
-        ignore line: [/usr/bin/ld -plugin /usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccoYUyjG.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --no-add-needed --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_dd502 /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/15 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_dd502.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o]
+        ignore line: [/usr/bin/ld -plugin /usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccH82Y1b.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --no-add-needed --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_75a50 /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/15 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_75a50.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o]
         linker tool for 'CXX': /usr/bin/ld
         collapse obj [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o] ==> [/usr/lib64/crt1.o]
         collapse obj [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o] ==> [/usr/lib64/crti.o]
@@ -528,24 +1430,435 @@ events:
   -
     kind: "message-v1"
     backtrace:
-      - "/usr/share/cmake/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
-      - "/usr/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
-      - "/usr/share/cmake/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/Internal/CMakeDetermineLinkerId.cmake:38 (message)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeDetermineCompilerABI.cmake:299 (cmake_determine_linker_id)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
       - "CMakeLists.txt:3 (project)"
     message: |
       Running the CXX compiler's linker: "/usr/bin/ld" "-v"
       GNU ld version 2.45.1-4.fc43
   -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/FindPkgConfig.cmake:517 (find_program)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/FindMPI.cmake:431 (find_package)"
+      - "CMakeLists.txt:7 (find_package)"
+    mode: "program"
+    variable: "PKG_CONFIG_EXECUTABLE"
+    description: "pkg-config executable"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "pkg-config"
+      - "pkgconf"
+    candidate_directories:
+      - "/usr/lib64/openmpi/bin/"
+      - "/home/george/.local/bin/"
+      - "/home/george/bin/"
+      - "/usr/share/Modules/bin/"
+      - "/usr/local/bin/"
+      - "/usr/bin/"
+      - "/usr/share/bcc/tools/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/"
+      - "/usr/local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/"
+      - "/usr/bin/"
+      - "/usr/sbin/"
+      - "/usr/"
+      - "/bin/"
+      - "/sbin/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/bin/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/sbin/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/"
+      - "/usr/X11R6/bin/"
+      - "/usr/X11R6/sbin/"
+      - "/usr/X11R6/"
+      - "/usr/pkg/bin/"
+      - "/usr/pkg/sbin/"
+      - "/usr/pkg/"
+      - "/opt/bin/"
+      - "/opt/sbin/"
+      - "/opt/"
+    searched_directories:
+      - "/usr/lib64/openmpi/bin/pkg-config"
+      - "/usr/lib64/openmpi/bin/pkgconf"
+      - "/home/george/.local/bin/pkg-config"
+      - "/home/george/.local/bin/pkgconf"
+      - "/home/george/bin/pkg-config"
+      - "/home/george/bin/pkgconf"
+      - "/usr/share/Modules/bin/pkg-config"
+      - "/usr/share/Modules/bin/pkgconf"
+      - "/usr/local/bin/pkg-config"
+      - "/usr/local/bin/pkgconf"
+    found: "/usr/bin/pkg-config"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64"
+        - "/usr/local"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/FindMPI.cmake:1535 (find_program)"
+      - "CMakeLists.txt:7 (find_package)"
+    mode: "program"
+    variable: "MPIEXEC_EXECUTABLE"
+    description: "Executable for running MPI programs."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "mpiexec"
+      - "mpiexec.hydra"
+      - "mpiexec.mpd"
+      - "mpirun"
+      - "lamexec"
+      - "srun"
+    candidate_directories:
+      - "/usr/lib64/openmpi/bin/bin/"
+      - "/usr/lib64/openmpi/bin/sbin/"
+      - "/usr/lib64/openmpi/bin/"
+      - "/home/george/.local/bin/bin/"
+      - "/home/george/.local/bin/sbin/"
+      - "/home/george/.local/bin/"
+      - "/home/george/bin/bin/"
+      - "/home/george/bin/sbin/"
+      - "/home/george/bin/"
+      - "/usr/share/Modules/bin/bin/"
+      - "/usr/share/Modules/bin/sbin/"
+      - "/usr/share/Modules/bin/"
+      - "/usr/local/bin/bin/"
+      - "/usr/local/bin/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/bin/bin/"
+      - "/usr/bin/sbin/"
+      - "/usr/bin/"
+      - "/usr/share/bcc/tools/bin/"
+      - "/usr/share/bcc/tools/sbin/"
+      - "/usr/share/bcc/tools/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/bin/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/sbin/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/"
+      - "/usr/local/bin/bin/"
+      - "/usr/local/bin/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/local/sbin/bin/"
+      - "/usr/local/sbin/sbin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/"
+      - "/usr/bin/bin/"
+      - "/usr/bin/sbin/"
+      - "/usr/bin/"
+      - "/usr/sbin/bin/"
+      - "/usr/sbin/sbin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/usr/sbin/"
+      - "/usr/"
+      - "/bin/bin/"
+      - "/bin/sbin/"
+      - "/bin/"
+      - "/sbin/bin/"
+      - "/sbin/sbin/"
+      - "/sbin/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/bin/bin/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/bin/sbin/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/bin/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/sbin/bin/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/sbin/sbin/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/sbin/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/bin/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/sbin/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/"
+      - "/usr/X11R6/bin/bin/"
+      - "/usr/X11R6/bin/sbin/"
+      - "/usr/X11R6/bin/"
+      - "/usr/X11R6/sbin/bin/"
+      - "/usr/X11R6/sbin/sbin/"
+      - "/usr/X11R6/sbin/"
+      - "/usr/X11R6/bin/"
+      - "/usr/X11R6/sbin/"
+      - "/usr/X11R6/"
+      - "/usr/pkg/bin/bin/"
+      - "/usr/pkg/bin/sbin/"
+      - "/usr/pkg/bin/"
+      - "/usr/pkg/sbin/bin/"
+      - "/usr/pkg/sbin/sbin/"
+      - "/usr/pkg/sbin/"
+      - "/usr/pkg/bin/"
+      - "/usr/pkg/sbin/"
+      - "/usr/pkg/"
+      - "/opt/bin/bin/"
+      - "/opt/bin/sbin/"
+      - "/opt/bin/"
+      - "/opt/sbin/bin/"
+      - "/opt/sbin/sbin/"
+      - "/opt/sbin/"
+      - "/opt/bin/"
+      - "/opt/sbin/"
+      - "/opt/"
+    searched_directories:
+      - "/usr/lib64/openmpi/bin/bin/mpiexec"
+      - "/usr/lib64/openmpi/bin/sbin/mpiexec"
+    found: "/usr/lib64/openmpi/bin/mpiexec"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64"
+        - "/usr/local"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/FindMPI.cmake:1686 (find_program)"
+      - "CMakeLists.txt:7 (find_package)"
+    mode: "program"
+    variable: "MPI_C_COMPILER"
+    description: "MPI compiler for C"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "mpigcc"
+      - "mpgcc"
+      - "mpigcc_r"
+      - "mpgcc_r"
+      - "mpicc"
+      - "mpcc"
+      - "mpicc_r"
+      - "mpcc_r"
+    candidate_directories:
+      - "/usr/lib64/openmpi/bin/"
+      - "/usr/lib64/openmpi/sbin/"
+      - "/usr/lib64/openmpi/"
+    searched_directories:
+      - "/usr/lib64/openmpi/bin/mpigcc"
+      - "/usr/lib64/openmpi/sbin/mpigcc"
+      - "/usr/lib64/openmpi/mpigcc"
+      - "/usr/lib64/openmpi/bin/mpgcc"
+      - "/usr/lib64/openmpi/sbin/mpgcc"
+      - "/usr/lib64/openmpi/mpgcc"
+      - "/usr/lib64/openmpi/bin/mpigcc_r"
+      - "/usr/lib64/openmpi/sbin/mpigcc_r"
+      - "/usr/lib64/openmpi/mpigcc_r"
+      - "/usr/lib64/openmpi/bin/mpgcc_r"
+      - "/usr/lib64/openmpi/sbin/mpgcc_r"
+      - "/usr/lib64/openmpi/mpgcc_r"
+    found: "/usr/lib64/openmpi/bin/mpicc"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64"
+        - "/usr/local"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/FindMPI.cmake:997 (find_library)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/FindMPI.cmake:1722 (_MPI_interrogate_compiler)"
+      - "CMakeLists.txt:7 (find_package)"
+    mode: "library"
+    variable: "MPI_mpi_LIBRARY"
+    description: "Location of the mpi library for MPI"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "mpi"
+      - "libmpi"
+    candidate_directories:
+      - "/usr/lib64/openmpi/lib/"
+      - "/usr/lib/gcc/x86_64-redhat-linux/15/"
+      - "/usr/lib64/"
+      - "/lib64/"
+      - "/usr/lib64/"
+      - "/usr/lib/"
+      - "/lib64/"
+      - "/lib/"
+      - "/usr/lib64/openmpi/bin/"
+      - "/usr/share/Modules/bin/"
+      - "/usr/local/bin/"
+      - "/usr/bin/"
+      - "/usr/share/bcc/tools/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/"
+      - "/usr/local/lib64/"
+      - "/usr/local/lib/"
+      - "/usr/local/"
+      - "/usr/lib64/"
+      - "/usr/lib/"
+      - "/usr/"
+      - "/lib64/"
+      - "/lib/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/"
+      - "/opt/"
+      - "/usr/lib64/X11/"
+    found: "/usr/lib64/openmpi/lib/libmpi.so"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64"
+        - "/usr/local"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+      CMAKE_SYSTEM_LIBRARY_PATH:
+        - "/usr/lib/X11"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/FindMPI.cmake:1329 (find_path)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/FindMPI.cmake:1803 (_MPI_split_include_dirs)"
+      - "CMakeLists.txt:7 (find_package)"
+    mode: "path"
+    variable: "MPI_C_HEADER_DIR"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "mpi.h"
+    candidate_directories:
+      - "/usr/include/openmpi-x86_64/"
+      - "/usr/lib64/openmpi/bin/"
+      - "/home/george/.local/bin/"
+      - "/home/george/bin/"
+      - "/usr/share/Modules/bin/"
+      - "/usr/local/bin/"
+      - "/usr/bin/"
+      - "/usr/share/bcc/tools/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/"
+      - "/usr/local/include/"
+      - "/usr/local/"
+      - "/usr/include/"
+      - "/usr/"
+      - "/include/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/include/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/"
+      - "/usr/X11R6/include/"
+      - "/usr/X11R6/"
+      - "/usr/pkg/include/"
+      - "/usr/pkg/"
+      - "/opt/include/"
+      - "/opt/"
+      - "/usr/include/X11/"
+    found: "/usr/include/openmpi-x86_64/"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64"
+        - "/usr/local"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+      CMAKE_SYSTEM_INCLUDE_PATH:
+        - "/usr/include/X11"
+  -
     kind: "try_compile-v1"
     backtrace:
-      - "/usr/share/cmake/Modules/FindMPI.cmake:1283 (try_compile)"
-      - "/usr/share/cmake/Modules/FindMPI.cmake:1327 (_MPI_try_staged_settings)"
-      - "/usr/share/cmake/Modules/FindMPI.cmake:1650 (_MPI_check_lang_works)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/FindMPI.cmake:1447 (try_compile)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/FindMPI.cmake:1491 (_MPI_try_staged_settings)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/FindMPI.cmake:1814 (_MPI_check_lang_works)"
       - "CMakeLists.txt:7 (find_package)"
     description: "The MPI test test_mpi for C in mode normal"
     directories:
-      source: "/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-nExOK4"
-      binary: "/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-nExOK4"
+      source: "/home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-fH3hWR"
+      binary: "/home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-fH3hWR"
     cmakeVariables:
       CMAKE_C_FLAGS: ""
       CMAKE_C_FLAGS_DEBUG: "-g"
@@ -554,30 +1867,165 @@ events:
       variable: "MPI_RESULT_C_test_mpi_normal"
       cached: true
       stdout: |
-        Change Dir: '/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-nExOK4'
+        Change Dir: '/home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-fH3hWR'
         
-        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_6785c/fast
-        /usr/bin/gmake  -f CMakeFiles/cmTC_6785c.dir/build.make CMakeFiles/cmTC_6785c.dir/build
-        gmake[1]: вход в каталог «/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-nExOK4»
-        Building C object CMakeFiles/cmTC_6785c.dir/test_mpi.c.o
-        /usr/bin/cc  -isystem /usr/include/openmpi-x86_64  -o CMakeFiles/cmTC_6785c.dir/test_mpi.c.o -c /mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-nExOK4/test_mpi.c
-        Linking C executable cmTC_6785c
-        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6785c.dir/link.txt --verbose=1
-        /usr/bin/cc -Wl,-rpath -Wl,/usr/lib64/openmpi/lib -Wl,--enable-new-dtags CMakeFiles/cmTC_6785c.dir/test_mpi.c.o -o cmTC_6785c  -Wl,-rpath,/usr/lib64/openmpi/lib /usr/lib64/openmpi/lib/libmpi.so
-        gmake[1]: выход из каталога «/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-nExOK4»
+        Run Build Command(s): /mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/ninja -v cmTC_cc5ef
+        [1/2] /usr/bin/cc  -isystem /usr/include/openmpi-x86_64 -fdiagnostics-color=always -o CMakeFiles/cmTC_cc5ef.dir/test_mpi.c.o -c /home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-fH3hWR/test_mpi.c
+        [2/2] : && /usr/bin/cc  -Wl,-rpath -Wl,/usr/lib64/openmpi/lib -Wl,--enable-new-dtags CMakeFiles/cmTC_cc5ef.dir/test_mpi.c.o -o cmTC_cc5ef  -Wl,-rpath,/usr/lib64/openmpi/lib  /usr/lib64/openmpi/lib/libmpi.so && :
         
       exitCode: 0
   -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/FindMPI.cmake:1686 (find_program)"
+      - "CMakeLists.txt:7 (find_package)"
+    mode: "program"
+    variable: "MPI_CXX_COMPILER"
+    description: "MPI compiler for CXX"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "mpig++"
+      - "mpg++"
+      - "mpig++_r"
+      - "mpg++_r"
+      - "mpigxx"
+      - "mpicxx"
+      - "mpiCC"
+      - "mpcxx"
+      - "mpCC"
+      - "mpic++"
+      - "mpc++"
+      - "mpicxx_r"
+      - "mpiCC_r"
+      - "mpcxx_r"
+      - "mpCC_r"
+      - "mpic++_r"
+      - "mpc++_r"
+    candidate_directories:
+      - "/usr/lib64/openmpi/bin/"
+      - "/usr/lib64/openmpi/sbin/"
+      - "/usr/lib64/openmpi/"
+    searched_directories:
+      - "/usr/lib64/openmpi/bin/mpig++"
+      - "/usr/lib64/openmpi/sbin/mpig++"
+      - "/usr/lib64/openmpi/mpig++"
+      - "/usr/lib64/openmpi/bin/mpg++"
+      - "/usr/lib64/openmpi/sbin/mpg++"
+      - "/usr/lib64/openmpi/mpg++"
+      - "/usr/lib64/openmpi/bin/mpig++_r"
+      - "/usr/lib64/openmpi/sbin/mpig++_r"
+      - "/usr/lib64/openmpi/mpig++_r"
+      - "/usr/lib64/openmpi/bin/mpg++_r"
+      - "/usr/lib64/openmpi/sbin/mpg++_r"
+      - "/usr/lib64/openmpi/mpg++_r"
+      - "/usr/lib64/openmpi/bin/mpigxx"
+      - "/usr/lib64/openmpi/sbin/mpigxx"
+      - "/usr/lib64/openmpi/mpigxx"
+    found: "/usr/lib64/openmpi/bin/mpicxx"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64"
+        - "/usr/local"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/FindMPI.cmake:1329 (find_path)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/FindMPI.cmake:1803 (_MPI_split_include_dirs)"
+      - "CMakeLists.txt:7 (find_package)"
+    mode: "path"
+    variable: "MPI_CXX_HEADER_DIR"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "mpi.h"
+    candidate_directories:
+      - "/usr/include/openmpi-x86_64/"
+      - "/usr/lib64/openmpi/bin/"
+      - "/home/george/.local/bin/"
+      - "/home/george/bin/"
+      - "/usr/share/Modules/bin/"
+      - "/usr/local/bin/"
+      - "/usr/bin/"
+      - "/usr/share/bcc/tools/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/"
+      - "/usr/local/include/"
+      - "/usr/local/"
+      - "/usr/include/"
+      - "/usr/"
+      - "/include/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/include/"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/"
+      - "/usr/X11R6/include/"
+      - "/usr/X11R6/"
+      - "/usr/pkg/include/"
+      - "/usr/pkg/"
+      - "/opt/include/"
+      - "/opt/"
+      - "/usr/include/X11/"
+    found: "/usr/include/openmpi-x86_64/"
+    search_context:
+      ENV{PATH}:
+        - "/usr/lib64/openmpi/bin"
+        - "/home/george/.local/bin"
+        - "/home/george/bin"
+        - "/usr/share/Modules/bin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/share/bcc/tools"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64"
+        - "/usr/local"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+      CMAKE_SYSTEM_INCLUDE_PATH:
+        - "/usr/include/X11"
+  -
     kind: "try_compile-v1"
     backtrace:
-      - "/usr/share/cmake/Modules/FindMPI.cmake:1283 (try_compile)"
-      - "/usr/share/cmake/Modules/FindMPI.cmake:1327 (_MPI_try_staged_settings)"
-      - "/usr/share/cmake/Modules/FindMPI.cmake:1650 (_MPI_check_lang_works)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/FindMPI.cmake:1447 (try_compile)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/FindMPI.cmake:1491 (_MPI_try_staged_settings)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/FindMPI.cmake:1814 (_MPI_check_lang_works)"
       - "CMakeLists.txt:7 (find_package)"
     description: "The MPI test test_mpi for CXX in mode normal"
     directories:
-      source: "/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-4N2HJB"
-      binary: "/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-4N2HJB"
+      source: "/home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-WW4k5A"
+      binary: "/home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-WW4k5A"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
       CMAKE_CXX_FLAGS_DEBUG: "-g"
@@ -586,29 +2034,23 @@ events:
       variable: "MPI_RESULT_CXX_test_mpi_normal"
       cached: true
       stdout: |
-        Change Dir: '/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-4N2HJB'
+        Change Dir: '/home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-WW4k5A'
         
-        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_6d6cf/fast
-        /usr/bin/gmake  -f CMakeFiles/cmTC_6d6cf.dir/build.make CMakeFiles/cmTC_6d6cf.dir/build
-        gmake[1]: вход в каталог «/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-4N2HJB»
-        Building CXX object CMakeFiles/cmTC_6d6cf.dir/test_mpi.cpp.o
-        /usr/bin/c++  -isystem /usr/include/openmpi-x86_64 -std=gnu++20 -o CMakeFiles/cmTC_6d6cf.dir/test_mpi.cpp.o -c /mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-4N2HJB/test_mpi.cpp
-        Linking CXX executable cmTC_6d6cf
-        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6d6cf.dir/link.txt --verbose=1
-        /usr/bin/c++ -Wl,-rpath -Wl,/usr/lib64/openmpi/lib -Wl,--enable-new-dtags CMakeFiles/cmTC_6d6cf.dir/test_mpi.cpp.o -o cmTC_6d6cf  -Wl,-rpath,/usr/lib64/openmpi/lib /usr/lib64/openmpi/lib/libmpi.so
-        gmake[1]: выход из каталога «/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-4N2HJB»
+        Run Build Command(s): /mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/ninja -v cmTC_6836b
+        [1/2] /usr/bin/c++  -isystem /usr/include/openmpi-x86_64 -std=gnu++20 -fdiagnostics-color=always -o CMakeFiles/cmTC_6836b.dir/test_mpi.cpp.o -c /home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-WW4k5A/test_mpi.cpp
+        [2/2] : && /usr/bin/c++  -Wl,-rpath -Wl,/usr/lib64/openmpi/lib -Wl,--enable-new-dtags CMakeFiles/cmTC_6836b.dir/test_mpi.cpp.o -o cmTC_6836b  -Wl,-rpath,/usr/lib64/openmpi/lib  /usr/lib64/openmpi/lib/libmpi.so && :
         
       exitCode: 0
   -
     kind: "try_compile-v1"
     backtrace:
-      - "/usr/share/cmake/Modules/FindMPI.cmake:1283 (try_compile)"
-      - "/usr/share/cmake/Modules/FindMPI.cmake:1677 (_MPI_try_staged_settings)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/FindMPI.cmake:1447 (try_compile)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/FindMPI.cmake:1841 (_MPI_try_staged_settings)"
       - "CMakeLists.txt:7 (find_package)"
     description: "The MPI test test_mpi for CXX in mode MPICXX"
     directories:
-      source: "/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-lVWUPz"
-      binary: "/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-lVWUPz"
+      source: "/home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-Aj9fVN"
+      binary: "/home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-Aj9fVN"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
       CMAKE_CXX_FLAGS_DEBUG: "-g"
@@ -617,32 +2059,26 @@ events:
       variable: "MPI_RESULT_CXX_test_mpi_MPICXX"
       cached: true
       stdout: |
-        Change Dir: '/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-lVWUPz'
+        Change Dir: '/home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-Aj9fVN'
         
-        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_2f237/fast
-        /usr/bin/gmake  -f CMakeFiles/cmTC_2f237.dir/build.make CMakeFiles/cmTC_2f237.dir/build
-        gmake[1]: вход в каталог «/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-lVWUPz»
-        Building CXX object CMakeFiles/cmTC_2f237.dir/test_mpi.cpp.o
-        /usr/bin/c++  -isystem /usr/include/openmpi-x86_64 -std=gnu++20 -o CMakeFiles/cmTC_2f237.dir/test_mpi.cpp.o -c /mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-lVWUPz/test_mpi.cpp
-        Linking CXX executable cmTC_2f237
-        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2f237.dir/link.txt --verbose=1
-        /usr/bin/c++ -Wl,-rpath -Wl,/usr/lib64/openmpi/lib -Wl,--enable-new-dtags CMakeFiles/cmTC_2f237.dir/test_mpi.cpp.o -o cmTC_2f237  -Wl,-rpath,/usr/lib64/openmpi/lib /usr/lib64/openmpi/lib/libmpi.so
-        gmake[1]: выход из каталога «/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-lVWUPz»
+        Run Build Command(s): /mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/ninja -v cmTC_38017
+        [1/2] /usr/bin/c++  -isystem /usr/include/openmpi-x86_64 -std=gnu++20 -fdiagnostics-color=always -o CMakeFiles/cmTC_38017.dir/test_mpi.cpp.o -c /home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-Aj9fVN/test_mpi.cpp
+        [2/2] : && /usr/bin/c++  -Wl,-rpath -Wl,/usr/lib64/openmpi/lib -Wl,--enable-new-dtags CMakeFiles/cmTC_38017.dir/test_mpi.cpp.o -o cmTC_38017  -Wl,-rpath,/usr/lib64/openmpi/lib  /usr/lib64/openmpi/lib/libmpi.so && :
         
       exitCode: 0
   -
     kind: "try_compile-v1"
     backtrace:
-      - "/usr/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
-      - "/usr/share/cmake/Modules/CheckCSourceCompiles.cmake:58 (cmake_check_source_compiles)"
-      - "/usr/share/cmake/Modules/FindThreads.cmake:97 (CHECK_C_SOURCE_COMPILES)"
-      - "/usr/share/cmake/Modules/FindThreads.cmake:163 (_threads_check_libc)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/Internal/CheckSourceCompiles.cmake:104 (try_compile)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/CheckCSourceCompiles.cmake:103 (cmake_check_source_compiles)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/FindThreads.cmake:160 (check_c_source_compiles)"
+      - "/mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/cmake/linux/x64/share/cmake-4.2/Modules/FindThreads.cmake:226 (_threads_check_libc)"
       - "CMakeLists.txt:8 (find_package)"
     checks:
       - "Performing Test CMAKE_HAVE_LIBC_PTHREAD"
     directories:
-      source: "/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-6bcGwU"
-      binary: "/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-6bcGwU"
+      source: "/home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-Q4LP7M"
+      binary: "/home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-Q4LP7M"
     cmakeVariables:
       CMAKE_C_FLAGS: ""
       CMAKE_C_FLAGS_DEBUG: "-g"
@@ -651,17 +2087,11 @@ events:
       variable: "CMAKE_HAVE_LIBC_PTHREAD"
       cached: true
       stdout: |
-        Change Dir: '/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-6bcGwU'
+        Change Dir: '/home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-Q4LP7M'
         
-        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_efb45/fast
-        /usr/bin/gmake  -f CMakeFiles/cmTC_efb45.dir/build.make CMakeFiles/cmTC_efb45.dir/build
-        gmake[1]: вход в каталог «/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-6bcGwU»
-        Building C object CMakeFiles/cmTC_efb45.dir/src.c.o
-        /usr/bin/cc -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_efb45.dir/src.c.o -c /mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-6bcGwU/src.c
-        Linking C executable cmTC_efb45
-        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_efb45.dir/link.txt --verbose=1
-        /usr/bin/cc CMakeFiles/cmTC_efb45.dir/src.c.o -o cmTC_efb45
-        gmake[1]: выход из каталога «/mnt/68EE9E90EE9E5662/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-6bcGwU»
+        Run Build Command(s): /mnt/833d8fb0-bd20-43e5-bc3f-9a9354a798c7/Software/CLion-2026.1.1/clion-2026.1.1/bin/ninja/linux/x64/ninja -v cmTC_c1742
+        [1/2] /usr/bin/cc -DCMAKE_HAVE_LIBC_PTHREAD  -fdiagnostics-color=always -o CMakeFiles/cmTC_c1742.dir/src.c.o -c /home/george/Repositories/ParallelProgramming/lab5/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-Q4LP7M/src.c
+        [2/2] : && /usr/bin/cc   CMakeFiles/cmTC_c1742.dir/src.c.o -o cmTC_c1742   && :
         
       exitCode: 0
 ...

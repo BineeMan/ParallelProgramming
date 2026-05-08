@@ -1,1 +1,0 @@
-/usr/bin/c++ -g -Wl,-rpath -Wl,/usr/lib64/openmpi/lib -Wl,--enable-new-dtags -Wl,--dependency-file=CMakeFiles/lab5.dir/link.d CMakeFiles/lab5.dir/lab5.cpp.o -o lab5  -Wl,-rpath,/usr/lib64/openmpi/lib /usr/lib64/openmpi/lib/libmpi.so

@@ -4,13 +4,15 @@
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
+#include <iostream>
 #include <mutex>
+#include <ostream>
 #include <thread>
 #include <vector>
 
 constexpr int L = 2048;
-constexpr int NUM_OF_TASKS = 2048;
-constexpr int NUM_OF_ITERATIONS = 16;
+//constexpr int NUM_OF_TASKS = 2048;
+//constexpr int NUM_OF_ITERATIONS = 3;
 
 constexpr int ASK_FOR_TASKS_TAG = 128;
 constexpr int SEND_NUM_OF_TASKS_TAG = 256;
@@ -20,20 +22,36 @@ constexpr int IS_DONE = 8;
 int size = 0;
 int rank = 0;
 
-double global_result = 0.0;
-int completed_tasks = 0;
+struct SharedState {
+private:
+    int NumOfTasks = 0;
 
-std::vector<int> task_list(NUM_OF_TASKS);
+public:
+    std::vector<int> TaskList;
 
-std::mutex task_mutex;
-std::size_t next_local_task = 0; // следующий локальный таск на выполнение
-std::size_t donate_boundary = 0; // правая граница задач, которые ещё можно отдать
+    std::mutex TaskMutex;
 
-void InitializeTasks(std::vector<int>& tasks, int iteration) {
-    for (int i = 0; i < NUM_OF_TASKS; ++i) {
-        tasks[i] = std::abs(50 - i % 100) * std::abs(rank - (iteration % size)) * L;
+    std::size_t NextLocalTaskIndex = 0; // следующий локальный таск на выполнение
+
+    std::size_t DonateBoundary = 0; // правая граница задач, которые ещё можно отдать
+
+    double global_result = 0.0;
+
+    int completed_tasks = 0;
+
+    SharedState(int numOfTasks) {
+        NumOfTasks = numOfTasks;
     }
-}
+
+    void InitializeTasks(int iteration, int numOfTasks) {
+        TaskList.clear();
+        TaskList.resize(numOfTasks);
+        for (int i = 0; i < numOfTasks; i++) {
+            TaskList[i] = std::abs(50 - i % 100) * std::abs(rank - (iteration % size)) * L;
+        }
+    }
+
+};
 
 void DoTask(int weight) {
     for (int j = 0; j < weight; ++j) {
@@ -56,7 +74,7 @@ void ProcessLocalTasks() {
             break;
         }
 
-        DoTask(task_list[static_cast<std::size_t>(idx)]);
+        DoTask(taskList[static_cast<std::size_t>(idx)]);
         ++completed_tasks;
     }
 }
@@ -97,16 +115,19 @@ void RequestAndProcessRemoteTasks() {
     } while (received_any);
 }
 
-void Work() {
-    for (int iter = 0; iter < NUM_OF_ITERATIONS; ++iter) {
+void RunTasks(int iterationsCount, int tasksCount) {
+    SharedState workerState(tasksCount);
+    for (int iter = 0; iter < iterationsCount; ++iter) {
         double start_iteration = MPI_Wtime();
 
         {
-            std::lock_guard<std::mutex> lock(task_mutex);
-            InitializeTasks(task_list, iter);
+            std::lock_guard<std::mutex> lock(workerState.TaskMutex);
+            workerState.InitializeTasks(iter, tasksCount);
             completed_tasks = 0;
             next_local_task = 0;
-            donate_boundary = task_list.size();
+            donate_boundary = taskList.size();
+
+            workerState.NextLocalTaskIndex = 0;
         }
 
         ProcessLocalTasks();
@@ -147,7 +168,7 @@ void Work() {
     MPI_Send(&done, 1, MPI_INT, rank, ASK_FOR_TASKS_TAG, MPI_COMM_WORLD);
 }
 
-void Receive() {
+void ListenTasks() {
     while (true) {
         int requester = 0;
         MPI_Recv(&requester, 1, MPI_INT, MPI_ANY_SOURCE, ASK_FOR_TASKS_TAG,
@@ -179,7 +200,7 @@ void Receive() {
         MPI_Send(&tasks_to_send, 1, MPI_INT, requester, SEND_NUM_OF_TASKS_TAG, MPI_COMM_WORLD);
 
         if (tasks_to_send > 0) {
-            MPI_Send(task_list.data() + start_index, tasks_to_send, MPI_INT,
+            MPI_Send(taskList.data() + start_index, tasks_to_send, MPI_INT,
                      requester, SEND_TASKS_TAG, MPI_COMM_WORLD);
         }
     }
@@ -200,11 +221,15 @@ int main(int argc, char** argv) {
 
     double start_time = MPI_Wtime();
 
-    std::thread receiver_thread(Receive);
-    std::thread worker_thread(Work);
+    std::thread listenerThread(ListenTasks);
 
-    worker_thread.join();
-    receiver_thread.join();
+    const int iterationsCount = 2;
+    const int tasksCount = 2000;
+
+    std::thread workerThread(RunTasks, iterationsCount, tasksCount);
+
+    workerThread.join();
+    listenerThread.join();
 
     double end_time = MPI_Wtime();
 
