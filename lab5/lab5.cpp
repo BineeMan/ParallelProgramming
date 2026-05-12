@@ -4,97 +4,144 @@
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
+#include <functional>
 #include <iostream>
 #include <mutex>
-#include <ostream>
 #include <thread>
+#include <utility>
 #include <vector>
 
-constexpr int L = 2048;
-//constexpr int NUM_OF_TASKS = 2048;
-//constexpr int NUM_OF_ITERATIONS = 3;
+class Timer {
+public:
+    Timer() {
+        Reset();
+    }
 
-constexpr int ASK_FOR_TASKS_TAG = 128;
-constexpr int SEND_NUM_OF_TASKS_TAG = 256;
-constexpr int SEND_TASKS_TAG = 512;
-constexpr int IS_DONE = 8;
+    void Reset() {
+        start = MPI_Wtime();
+    }
 
-int size = 0;
-int rank = 0;
+    double GetDurationSec() const {
+        return MPI_Wtime() - start;
+    }
 
-struct SharedState {
 private:
-    int NumOfTasks = 0;
+    double start = 0.0;
+};
+
+enum class EMessageTag {
+    AskForTasks = 1,
+    SendTaskCount = 2,
+    SendTasks = 3,
+    IsDone = 4
+};
+
+struct WorkerState {
+private:
+    int NumTasks = 0;
 
 public:
+    int Size = 0;
+
+    int Rank = 0;
+
     std::vector<int> TaskList;
 
     std::mutex TaskMutex;
 
-    std::size_t NextLocalTaskIndex = 0; // следующий локальный таск на выполнение
+    std::size_t NextLocalTaskIndex = 0;
 
-    std::size_t DonateBoundary = 0; // правая граница задач, которые ещё можно отдать
+    std::size_t DonateBoundary = 0;
 
-    double global_result = 0.0;
+    double GlobalResult = 0.0;
 
-    int completed_tasks = 0;
+    int CompletedTasks = 0;
 
-    SharedState(int numOfTasks) {
-        NumOfTasks = numOfTasks;
+    WorkerState(int numTasks, int size, int rank)
+        : NumTasks(numTasks),
+          Size(size),
+          Rank(rank),
+          TaskList(static_cast<std::size_t>(numTasks), 0) {
     }
 
-    void InitializeTasks(int iteration, int numOfTasks) {
-        TaskList.clear();
-        TaskList.resize(numOfTasks);
-        for (int i = 0; i < numOfTasks; i++) {
-            TaskList[i] = std::abs(50 - i % 100) * std::abs(rank - (iteration % size)) * L;
+    void InitializeTasks(int iteration) {
+        std::lock_guard<std::mutex> lock(TaskMutex);
+
+        TaskList.resize(NumTasks);
+        for (int i = 0; i < NumTasks; ++i) {
+            constexpr int L = 2048;
+            TaskList[i] = std::abs(50 - i % 100) * std::abs(Rank - (iteration % Size)) * L;
         }
+
+        NextLocalTaskIndex = 0;
+        DonateBoundary = TaskList.size();
+        CompletedTasks = 0;
     }
 
+    int GetLocalTaskIndex() {
+        std::lock_guard<std::mutex> lock(TaskMutex);
+
+        if (NextLocalTaskIndex >= DonateBoundary) {
+            return -1;
+        }
+
+        return NextLocalTaskIndex++;
+    }
+
+    std::pair<int, std::size_t> GetDonation() {
+        std::lock_guard<std::mutex> lock(TaskMutex);
+
+        std::size_t available = 0;
+        if (DonateBoundary > NextLocalTaskIndex) {
+            available = DonateBoundary - NextLocalTaskIndex;
+        }
+
+        int tasksToSend = static_cast<int>(available / (Size * 2));
+        std::size_t startIndex = 0;
+
+        if (tasksToSend > 0) {
+            startIndex = DonateBoundary - static_cast<std::size_t>(tasksToSend);
+            DonateBoundary = startIndex;
+        }
+
+        return { tasksToSend, startIndex };
+    }
+
+    void ExecuteTask(int weight) {
+        for (int j = 0; j < weight; ++j) {
+            GlobalResult += std::sin(static_cast<double>(j));
+        }
+        ++CompletedTasks;
+    }
 };
 
-void DoTask(int weight) {
-    for (int j = 0; j < weight; ++j) {
-        global_result += std::sin(static_cast<double>(j));
-    }
-}
-
-void ProcessLocalTasks() {
+void ProcessLocalTasks(WorkerState& state) {
     while (true) {
-        int idx = -1;
-
-        {
-            std::lock_guard<std::mutex> lock(task_mutex);
-            if (next_local_task < donate_boundary) {
-                idx = static_cast<int>(next_local_task++);
-            }
-        }
-
+        int idx = state.GetLocalTaskIndex();
         if (idx < 0) {
             break;
         }
 
-        DoTask(taskList[static_cast<std::size_t>(idx)]);
-        ++completed_tasks;
+        state.ExecuteTask(state.TaskList.at(idx));
     }
 }
 
-void RequestAndProcessRemoteTasks() {
-    bool received_any = false;
+void RequestAndProcessRemoteTasks(WorkerState& state) {
+    bool receivedAny = false;
 
     do {
-        received_any = false;
+        receivedAny = false;
 
-        for (int peer = 0; peer < size; ++peer) {
-            if (peer == rank) {
+        for (int peer = 0; peer < state.Size; ++peer) {
+            if (peer == state.Rank) {
                 continue;
             }
 
-            int request_rank = rank;
-            MPI_Send(&request_rank, 1, MPI_INT, peer, ASK_FOR_TASKS_TAG, MPI_COMM_WORLD);
+            int requestRank = state.Rank;
+            MPI_Send(&requestRank, 1, MPI_INT, peer, static_cast<int>(EMessageTag::AskForTasks), MPI_COMM_WORLD);
 
             int count = 0;
-            MPI_Recv(&count, 1, MPI_INT, peer, SEND_NUM_OF_TASKS_TAG,
+            MPI_Recv(&count, 1, MPI_INT, peer, static_cast<int>(EMessageTag::SendTaskCount),
                      MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
             if (count <= 0) {
@@ -102,106 +149,93 @@ void RequestAndProcessRemoteTasks() {
             }
 
             std::vector<int> chunk(static_cast<std::size_t>(count));
-            MPI_Recv(chunk.data(), count, MPI_INT, peer, SEND_TASKS_TAG,
+            MPI_Recv(chunk.data(), count, MPI_INT, peer, static_cast<int>(EMessageTag::SendTasks),
                      MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
-            received_any = true;
+            receivedAny = true;
 
             for (int weight: chunk) {
-                DoTask(weight);
-                ++completed_tasks;
+                state.ExecuteTask(weight);
             }
         }
-    } while (received_any);
+    } while (receivedAny);
 }
 
-void RunTasks(int iterationsCount, int tasksCount) {
-    SharedState workerState(tasksCount);
-    for (int iter = 0; iter < iterationsCount; ++iter) {
-        double start_iteration = MPI_Wtime();
+void RunTasks(WorkerState& state, int iterationsCount) {
+    for (int iter = 0; iter < iterationsCount; iter++) {
 
-        {
-            std::lock_guard<std::mutex> lock(workerState.TaskMutex);
-            workerState.InitializeTasks(iter, tasksCount);
-            completed_tasks = 0;
-            next_local_task = 0;
-            donate_boundary = taskList.size();
+        Timer timer;
 
-            workerState.NextLocalTaskIndex = 0;
-        }
+        state.InitializeTasks(iter);
 
-        ProcessLocalTasks();
-        RequestAndProcessRemoteTasks();
+        ProcessLocalTasks(state);
+        RequestAndProcessRemoteTasks(state);
 
-        double end_iteration = MPI_Wtime();
-        double iteration_time = end_iteration - start_iteration;
+        double iterationTime = timer.GetDurationSec();
 
-        double max_iteration_time = 0.0;
-        double min_iteration_time = 0.0;
+        double maxIterationTime = 0.0;
+        double minIterationTime = 0.0;
 
-        MPI_Allreduce(&iteration_time, &max_iteration_time, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
-        MPI_Allreduce(&iteration_time, &min_iteration_time, 1, MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
+        MPI_Allreduce(&iterationTime, &maxIterationTime, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+        MPI_Allreduce(&iterationTime, &minIterationTime, 1, MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
         MPI_Barrier(MPI_COMM_WORLD);
 
-        double disbalance = max_iteration_time - min_iteration_time;
-        double disbalance_percent = (max_iteration_time > 0.0)
-                                        ? (disbalance / max_iteration_time) * 100.0
-                                        : 0.0;
+        double disbalance = maxIterationTime - minIterationTime;
+        double disbalancePercent = (maxIterationTime > 0.0)
+                                       ? (disbalance / maxIterationTime) * 100.0
+                                       : 0.0;
 
-        std::printf("\n");
-        std::printf("rank = %d\n", rank);
-        std::printf("iteration = %d\n", iter);
-        std::printf("time = %f\n", iteration_time);
-        std::printf("task_list = %d\n", completed_tasks);
-        std::printf("global_result = %.2f\n", global_result);
+        std::cout << "Rank = " << state.Rank << std::endl;
+        std::cout << "Iteration = " << iter << std::endl;
+        std::cout << "Time = " << iterationTime << std::endl;
+        std::cout << "Task list = " << state.CompletedTasks << std::endl;
+        std::cout << "Global result = " << state.GlobalResult << std::endl;
 
-        if (rank == 0) {
-            std::printf("iteration #%d\n", iter);
-            std::printf("disbalance = %.2f disbalance_percent = %.2f\n",
-                        disbalance, disbalance_percent);
+        if (state.Rank == 0) {
+            std::cout << "Iteration № " << iter << std::endl;
+            std::cout << "Disbalance = " << disbalance << ", disbalance percent = " << disbalancePercent << std::endl;
         }
-
-        std::printf("\n");
+        std::cout << "-----------------------------" << std::endl;
     }
 
-    int done = IS_DONE;
-    MPI_Send(&done, 1, MPI_INT, rank, ASK_FOR_TASKS_TAG, MPI_COMM_WORLD);
+    int done = static_cast<int>(EMessageTag::IsDone);
+    MPI_Send(&done, 1, MPI_INT, state.Rank, static_cast<int>(EMessageTag::AskForTasks), MPI_COMM_WORLD);
 }
 
-void ListenTasks() {
+void ListenTasks(WorkerState& state) {
     while (true) {
         int requester = 0;
-        MPI_Recv(&requester, 1, MPI_INT, MPI_ANY_SOURCE, ASK_FOR_TASKS_TAG,
+        MPI_Recv(&requester, 1, MPI_INT, MPI_ANY_SOURCE, static_cast<int>(EMessageTag::AskForTasks),
                  MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
-        if (requester == IS_DONE) {
+        if (requester == static_cast<int>(EMessageTag::IsDone)) {
             break;
         }
 
-        int tasks_to_send = 0;
-        std::size_t start_index = 0;
+        int tasksToSend = 0;
+        std::size_t startIndex = 0;
 
         {
-            std::lock_guard<std::mutex> lock(task_mutex);
+            std::lock_guard<std::mutex> lock(state.TaskMutex);
 
             std::size_t available = 0;
-            if (donate_boundary > next_local_task) {
-                available = donate_boundary - next_local_task;
+            if (state.DonateBoundary > state.NextLocalTaskIndex) {
+                available = state.DonateBoundary - state.NextLocalTaskIndex;
             }
 
-            tasks_to_send = static_cast<int>(available / (size * 2));
+            tasksToSend = static_cast<int>(available / (state.Size * 2));
 
-            if (tasks_to_send > 0) {
-                start_index = donate_boundary - static_cast<std::size_t>(tasks_to_send);
-                donate_boundary = start_index;
+            if (tasksToSend > 0) {
+                startIndex = state.DonateBoundary - static_cast<std::size_t>(tasksToSend);
+                state.DonateBoundary = startIndex;
             }
         }
 
-        MPI_Send(&tasks_to_send, 1, MPI_INT, requester, SEND_NUM_OF_TASKS_TAG, MPI_COMM_WORLD);
+        MPI_Send(&tasksToSend, 1, MPI_INT, requester, static_cast<int>(EMessageTag::SendTaskCount), MPI_COMM_WORLD);
 
-        if (tasks_to_send > 0) {
-            MPI_Send(taskList.data() + start_index, tasks_to_send, MPI_INT,
-                     requester, SEND_TASKS_TAG, MPI_COMM_WORLD);
+        if (tasksToSend > 0) {
+            MPI_Send(state.TaskList.data() + startIndex, tasksToSend, MPI_INT,
+                     requester, static_cast<int>(EMessageTag::SendTasks), MPI_COMM_WORLD);
         }
     }
 }
@@ -211,30 +245,33 @@ int main(int argc, char** argv) {
     MPI_Init_thread(&argc, &argv, MPI_THREAD_MULTIPLE, &provided);
 
     if (provided != MPI_THREAD_MULTIPLE) {
-        std::printf("Can't set MPI_THREAD_MULTIPLE.\n");
+        std::cout << "Can't set MPI_THREAD_MULTIPLE." << std::endl;
         MPI_Finalize();
         return 1;
     }
 
+    int size = 0;
+    int rank = 0;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    double start_time = MPI_Wtime();
-
-    std::thread listenerThread(ListenTasks);
+    Timer timer;
 
     const int iterationsCount = 2;
     const int tasksCount = 2000;
 
-    std::thread workerThread(RunTasks, iterationsCount, tasksCount);
+    WorkerState state(tasksCount, size, rank);
+
+    std::thread listenerThread(ListenTasks, std::ref(state));
+    std::thread workerThread(RunTasks, std::ref(state), iterationsCount);
 
     workerThread.join();
     listenerThread.join();
 
-    double end_time = MPI_Wtime();
+    double durationSec = timer.GetDurationSec();
 
     if (rank == 0) {
-        std::printf("Time spent: %.2lf seconds.\n", end_time - start_time);
+        std::cout << "Time spent: " << durationSec << " seconds." << std::endl;
     }
 
     MPI_Finalize();
